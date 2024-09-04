@@ -20,8 +20,7 @@ function dynamicRewardStatusColor() {
                 span.style.padding = "5px 15px";
                 span.style.borderRadius = "10px";
                 break;
-            case "limit reached":
-            case "expired":
+            case "unavailable":
                 span.style.backgroundColor = "rgb(110, 54, 48)";
                 span.style.color = "white";
                 span.style.padding = "5px 15px";
