@@ -37,17 +37,14 @@ function dynamicRewardStatusColor() {
 
 function timeAndDateInterval() {
     var currentLocalDate = new Date();
-    var currentUtcDate = new Date(currentLocalDate.getTime() + currentLocalDate.getTimezoneOffset() * 60000);
     var targetDate = new Date(document.getElementById('bc_target_date').dateTime);
 
-    var timeDiff = Math.abs(targetDate - currentUtcDate);
+    var timeDiff = Math.abs(targetDate - currentLocalDate);
 
     var seconds = Math.floor((timeDiff / 1000) % 60);
     var minutes = Math.floor((timeDiff / (1000 * 60)) % 60);
     var hours = Math.floor((timeDiff / (1000 * 60 * 60)) % 24);
     var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-    hours = hours + (days * 24);
 
     var timeInterval = '';
 
@@ -55,9 +52,8 @@ function timeAndDateInterval() {
         timeInterval += days + 'd ';
     }
 
-    var remainingHours = Math.floor(timeDiff / (1000 * 60 * 60)) - (days * 24);
-    if (remainingHours > 0) {
-        timeInterval += remainingHours + 'h ';
+    if (hours > 0) {
+        timeInterval += hours + 'h ';
     }
 
     if (minutes > 0) {
@@ -88,7 +84,7 @@ function showTimeAndDate() {
     var formattedTime = hours + ":" + minutes + ", " + month + " " + day + ", " + year;
 
     // Update the time display
-    document.getElementById("bc_show_current_time_and_date").textContent = " | " + formattedTime + " (UTC+0)";
+    document.getElementById("bc_show_current_time_and_date").textContent = " | " + formattedTime + " (local time)";
 }
 
 document.getElementById("bc_available_btn").onclick = function() {
