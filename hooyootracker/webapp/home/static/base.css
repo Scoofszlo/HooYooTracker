@@ -1,0 +1,142 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-size: 16px;
+    font-family: "Arial";
+}
+
+ul {
+    padding-left: 20px;
+}
+
+header {
+    display: flex;
+    width: 100%;
+    padding: 20px 100px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: rgb(255, 255, 255);
+    background-color: rgb(24, 24, 24);
+}
+
+.header_container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    gap: 30px;
+}
+
+.hc_website_title_wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.hc_website_title_wrapper > p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.hc_website_switch_container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.hc_btn_wrapper {
+    display: flex;
+    gap: 15px;
+}
+
+.hc_btn_wrapper > button {
+    background-color: rgb(38, 38, 38);
+    color: rgb(255, 255, 255);
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 25px;
+    transition: background-color 0.1s ease;
+}
+
+.hc_btn_wrapper > button:hover {
+    background-color: rgb(121, 121, 121);
+    cursor: pointer;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    padding: 50px 100px;
+    background-color: rgb(24, 24, 24);
+    color: rgb(255, 255, 255);
+}
+
+footer a {
+    color: rgb(226, 226, 226);
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+footer a:hover{
+    color: rgb(156, 156, 156);
+    cursor: pointer;
+}
+
+.footer_container {
+    display: flex;
+    max-width: 1200px;
+    width: 100%;
+    gap: 30px;
+}
+
+.fc_about_dev {
+    width: calc(50% - 10px);
+}
+
+.fc_projects, .fc_contact_details {
+    width: calc(25% - 10px);
+}
+
+
+@media only screen and (max-width: 1200px) {
+
+}
+
+@media only screen and (max-width: 1000px) {
+    footer > div {
+        flex-direction: column;
+    }
+
+    footer > div > div:nth-of-type(1), footer > div > div:nth-of-type(2), footer > div > div:nth-of-type(3) {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    header {
+        padding: 20px;
+    }
+
+    .header_container {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .hc_website_title_wrapper { 
+        justify-content: center;
+
+    }
+
+    footer {
+        padding: 50px;
+    }
+}
+
+@media only screen and (max-width: 530px) {
+
+}

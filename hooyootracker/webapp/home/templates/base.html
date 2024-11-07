@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HooYooTracker</title>
+    <link href="{{ url_for('static', filename='base.css') }}" rel="stylesheet" />
+    {% block gi_css %}{% endblock %}
+    <script defer="" src="{{ url_for('static', filename='base.js') }}" type="text/javascript"></script>
+</head>
+<body>
+    <header>
+        <div class="header_container">
+            <div class="hc_website_title_wrapper">
+                <p>HooYooTracker</p>
+            </div>
+            <div class="hc_website_switch_container">
+                <div class="hc_btn_wrapper">
+                    <button id="hc_genshin_impact_btn">Genshin Impact</button>
+                    <button id="hc_zenless_zone_zero_btn">Zenless Zone Zero</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    {% block content %}
+    {% endblock %}
+    <footer>
+        <div class="footer_container">
+            <div class="fc_about_dev">
+                <h2 style="margin-bottom: 5px;">Scoofszlo</h2>
+                <p>Just a learner trying some stuff! Passionate in Python and HTML/CSS/JS projects.</p>
+            </div>
+            <div class="fc_projects">
+                <h2 style="margin-bottom: 5px;">My Projects</h2>
+                <p><a href="https://github.com/Scoofszlo/HooYooTracker">HooYooTracker</a></p>
+                <p><a href="https://github.com/Scoofszlo/eqdatatools">eqdatatools</a></p>
+                <p><a href="https://github.com/Scoofszlo/Project_Vismark">Project Vismark</a></p>
+            </div>
+            <div class="fc_contact_details">
+                <h2 style="margin-bottom: 5px;">Contact</h2>
+                <p><a href="https://github.com/Scoofszlo">GitHub</a></p>
+                <p><a href="https://twitter.com/Scoofszlo">Twitter</a></p>
+                <p>Discord (@scoofszlo)</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        
+    </script>
+</body>
+</html>
