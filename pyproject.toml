@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "hooyootracker"
+version = "0.1.0"
+description = "A webapp that retrieves redeemable codes from various sources and organize them"
+authors = ["Scoofszlo <scoofszlo@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+
+[tool.poetry.dependencies]
+python = "^3.12"
+bs4 = "^0.0.2"
+requests = "^2.32.3"
+flask = "^3.0.3"
+waitress = "^3.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+tqdm = "^4.67.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
