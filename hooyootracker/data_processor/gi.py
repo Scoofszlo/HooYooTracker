@@ -20,7 +20,6 @@ def get_data() -> List[Dict[str, str]]:
 
 
 def get_data_list() -> List[Dict[str, str | List]]:
-    logger.info("")
     info_list = [PocketTactics(), Game8(), RockPaperShotgun(), VG247()]
 
     return info_list
