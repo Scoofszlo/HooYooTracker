@@ -1,3 +1,4 @@
+from typing import Dict, List
 from hooyootracker.extractor.gi import (
     Game8,
     PocketTactics,
@@ -9,9 +10,23 @@ from hooyootracker.logger import Logger
 logger = Logger()
 
 
-def get_data():
-    sources = [Game8(), PocketTactics(), RockPaperShotgun(), VG247()]
+def get_data() -> List[Dict[str, str]]:
+    info_set = get_data_list()
+    final_list = remove_duplicate_entries(info_set)
 
+    logger.info(f"Total list of codes: {len(final_list)}")
+
+    return final_list
+
+
+def get_data_list() -> List[Dict[str, str | List]]:
+    logger.info("")
+    info_list = [PocketTactics(), Game8(), RockPaperShotgun(), VG247()]
+
+    return info_list
+
+
+def remove_duplicate_entries(sources: List[Dict[str, str | List]]) -> List[Dict[str, str]]:
     unique_list = set()
     final_list = []
     total_duplicate_codes = 0
@@ -21,6 +36,9 @@ def get_data():
     for source in sources:
         logger.debug(f"Processing source: {source['source_name']}")
         code_list = source['code_list']
+
+        if not code_list:
+            continue
 
         for entry in code_list:
             code = entry["code"]
@@ -37,12 +55,11 @@ def get_data():
                 }
 
                 final_list.append(code_info)
-                logger.debug(f"Added new code: {code} from {source['source_name']}")
+                logger.debug(f"Skipping {code} ({source['source_name']}) as it is unique")
             else:
                 total_duplicate_codes += 1
                 logger.debug(f"Duplicate code found: {code} ({source['source_name']})")
 
     logger.info(f"Removed {total_duplicate_codes} duplicate codes")
-    logger.info(f"Total list of codes: {len(final_list)}")
 
     return final_list
