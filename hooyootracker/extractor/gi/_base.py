@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List
 from bs4 import Tag
-from hooyootracker._logger import Logger
+from hooyootracker.logger import Logger
 
 logger = Logger.get_logger()
 

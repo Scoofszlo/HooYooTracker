@@ -4,7 +4,7 @@ from hooyootracker.extractor.gi import (
     RockPaperShotgun,
     VG247
 )
-from hooyootracker._logger import Logger
+from hooyootracker.logger import Logger
 
 logger = Logger.get_logger(level="INFO")  # Set logging level to INFO
 
