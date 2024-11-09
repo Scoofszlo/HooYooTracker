@@ -4,16 +4,17 @@ import logging
 class Logger:
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls, level="INFO"):
         if cls._instance is None:
+            level = cls.identify_level(level)
             cls._instance = super(Logger, cls).__new__(cls)
-            cls._instance.__init__()
-        return cls._instance
+            cls._instance.__init__(level)
+        return cls._instance.logger
 
-    def __init__(self):
+    def __init__(self, level):
         if not hasattr(self, 'logger'):
             self.logger = logging.getLogger(__name__)
-            self.logger.setLevel(logging.INFO)
+            self.logger.setLevel(level)
             self.logger.propagate = False
             handler = logging.StreamHandler()
             formatter = logging.Formatter(
@@ -24,22 +25,18 @@ class Logger:
             self.logger.addHandler(handler)
 
     @staticmethod
-    def get_logger(level="INFO"):
+    def identify_level(level):
         level = level.upper()
         if level == "INFO":
-            level = logging.INFO
+            return logging.INFO
         elif level == "DEBUG":
-            level = logging.DEBUG
+            return logging.DEBUG
         elif level == "WARNING":
-            level = logging.WARNING
+            return logging.WARNING
         elif level == "ERROR":
-            level = logging.ERROR
+            return logging.ERROR
         elif level == "CRITICAL":
-            level = logging.CRITICAL
+            return logging.CRITICAL
         else:
-            level = logging.INFO
-            Logger().logger.warning(f"Invalid logging level '{level}' provided. Defaulting to INFO.")
-
-        logger_instance = Logger().logger
-        logger_instance.setLevel(level)
-        return logger_instance
+            logging.getLogger(__name__).warning(f"Invalid logging level '{level}' provided. Defaulting to INFO.")
+            return logging.INFO

@@ -6,7 +6,7 @@ from hooyootracker.extractor.gi import (
 )
 from hooyootracker.logger import Logger
 
-logger = Logger.get_logger(level="INFO")  # Set logging level to INFO
+logger = Logger()
 
 
 def get_data():

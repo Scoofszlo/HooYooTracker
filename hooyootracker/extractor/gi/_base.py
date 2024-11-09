@@ -3,7 +3,7 @@ from typing import Dict, List
 from bs4 import Tag
 from hooyootracker.logger import Logger
 
-logger = Logger.get_logger()
+logger = Logger()
 
 
 class DataExtractor(ABC):
@@ -24,8 +24,11 @@ class DataExtractor(ABC):
             "code_list": self.get_data(source_name, source_url)
         }
 
-        code_list_len = len(self.code_info["code_list"])
-        logger.info(f"Data successfully extracted from {source_name} ({code_list_len} codes)")
+        if self.code_info["code_list"]:
+            code_list_len = len(self.code_info["code_list"])
+            logger.info(f"Data successfully extracted from {source_name} ({code_list_len} codes)")
+        else:
+            logger.info(f"Skipping {source_name} due to error")
 
     def get_data(self, source_name: str, source_url: str) -> List[Dict[str, str]]:
         """Returns a list of dicts containing the code and reward details,
