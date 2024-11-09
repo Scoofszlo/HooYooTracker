@@ -17,13 +17,21 @@ class PocketTactics(DataExtractor):
         webpage = BeautifulSoup(webpage.text, 'html.parser')
 
         list_container = webpage.find('div', class_='entry-content')
-        code_list = list_container.find_all('ul')[0]
-        source_data = code_list.find_all('li')
+        code_list = self._process_multiple_lists(list_container)
+
+        source_data = []
+        for sublist in code_list:
+            for item in sublist.find_all('li'):
+                source_data.append(item)
 
         return source_data
 
     def _get_code(self, entry: Tag) -> str:
-        code = entry.find('strong').text
+        try:
+            code = entry.find('strong').text
+        except AttributeError:
+            code = entry.find('b').text
+
         return code
 
     def _get_reward_desc(self, entry: Tag) -> str:
@@ -31,3 +39,10 @@ class PocketTactics(DataExtractor):
         reward_desc = re.split(r"\s+–\s+", code_and_reward_list)[1]
 
         return reward_desc
+
+    def _process_multiple_lists(self, list_container):
+        first_code_list = list_container.find_all('ul')[0]
+        second_code_list = list_container.find_all('ul')[1]
+
+        code_list = [first_code_list, second_code_list]
+        return code_list
