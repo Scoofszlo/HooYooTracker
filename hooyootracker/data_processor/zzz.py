@@ -1,6 +1,7 @@
 from typing import Dict, List
 from hooyootracker.extractor.zzz import (
     Game8,
+    Polygon,
     VG247
 )
 from hooyootracker.logger import Logger
@@ -18,7 +19,7 @@ def get_data() -> List[Dict[str, str]]:
 
 
 def get_data_list() -> List[Dict[str, str | List]]:
-    info_list = [Game8(), VG247()]
+    info_list = [Game8(), Polygon(), VG247()]
 
     return info_list
 
