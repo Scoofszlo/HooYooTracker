@@ -1,0 +1,119 @@
+.body_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 100px 100px;
+    background-color: rgb(12, 12, 12);
+}
+
+.bc_code_list_container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    flex-direction: column;
+    padding: 40px;
+    border-radius: 10px;
+    color: white;
+    background-color: rgb(24, 24, 24);
+    
+}
+
+.bc_code_list_container > h1 {
+    margin-top: 20px;
+}
+
+.bc_code_list_container > p > span:nth-of-type(2) {
+    color: rgb(156, 156, 156);
+}
+
+.bc_cards_container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.bc_card {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    border-radius: 15px;
+    background-color: rgb(38, 38, 38);
+    width: calc(50% - 10px);
+}
+
+.bc_code_details_container {
+    display: flex;
+    flex-direction: column;
+    width: calc(70% - 10px);
+    gap: 5px;
+}
+
+
+.bc_reward_code_wrapper {
+    font-size: 26px;
+    font-weight: bold;
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+.bc_reward_code_wrapper > a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.bc_reward_code_wrapper > a:hover {
+    cursor: pointer;
+    color: rgb(126, 126, 126);
+}
+
+.bc_reward_details_wrapper {
+    word-wrap: break-word;
+}
+
+.bc_reward_code_status_wrapper {
+    width: calc(30% - 10px);
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+
+@media only screen and (max-width: 1000px) {
+    .bc_card {
+        flex-direction: column;
+        width: calc(50% - 10px);
+        gap: 20px;
+    }
+
+    .bc_code_details_container {
+        width: 100%;
+    }
+
+    .bc_reward_code_status_wrapper {
+        width: 100%;
+        margin-top: auto;
+        justify-content: unset;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .body_content {
+        padding: 20px;
+    }
+
+    .bc_code_list_container {
+        padding: 20px;
+    }
+
+    .bc_card {
+        flex-direction: column;
+        width: 100%;
+        gap: 20px;
+    }
+}
