@@ -1,3 +1,4 @@
+import toml
 from typing import Dict, List
 from hooyootracker.extractor.gi import (
     Game8,
@@ -10,8 +11,8 @@ from hooyootracker.logger import Logger
 logger = Logger()
 
 
-def get_data() -> List[Dict[str, str]]:
-    info_set = get_data_list()
+def get_data(sources: List[str]) -> List[Dict[str, str]]:
+    info_set = get_data_list(sources)
     final_list = remove_duplicate_entries(info_set)
 
     logger.info(f"Total list of codes: {len(final_list)}")
@@ -19,8 +20,51 @@ def get_data() -> List[Dict[str, str]]:
     return final_list
 
 
-def get_data_list() -> List[Dict[str, str | List]]:
-    info_list = [PocketTactics(), Game8(), RockPaperShotgun(), VG247()]
+def get_sources(config_path: str) -> List[str] | None:
+    """
+    Retrieves source names specified from the config path and returns a
+    list of strings containing source names.
+
+    If there is an error parsing the config file, it will return a None
+    and nothing will be processed.
+    """
+    logger.debug(f"Attempting to open config file at: {config_path}")
+
+    try:
+        with open(config_path, 'r') as file:
+            config = toml.load(file)
+        logger.debug("Config file loaded successfully")
+    except Exception:
+        logger.error("Error parsing config file. Nothing will be processed")
+        return None
+
+    sources = config['sources']['gi_sources']
+    logger.debug(f"Sources retrieved: {sources}")
+
+    return sources
+
+
+def get_data_list(sources: List[str]) -> List[Dict[str, str | List]]:
+    source_classes = {
+        "PocketTactics": PocketTactics,
+        "Game8": Game8,
+        "RockPaperShotgun": RockPaperShotgun,
+        "VG247": VG247
+    }
+
+    if len(sources) == 0:
+        logger.info("No list of sources have been passed. Nothing will be processed.")
+        return None
+    else:
+        logger.info(f"Processing {len(sources)} source{'s' if len(sources) > 1 else ''}")
+
+    info_list = []
+
+    for source in sources:
+        if source in source_classes:
+            info_list.append(source_classes[source]())
+        else:
+            logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
 
     return info_list
 
