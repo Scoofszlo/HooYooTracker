@@ -1,64 +1,50 @@
-from typing import Dict, List
-from hooyootracker.extractor.gi import (
+from typing import Dict, List, Type
+from hooyootracker.scraper.gi import (
     Game8,
     PocketTactics,
     RockPaperShotgun,
     VG247
 )
 from hooyootracker.logger import Logger
+from ._base import DataProcessor
 
 logger = Logger()
 
 
-def get_data() -> List[Dict[str, str]]:
-    info_set = get_data_list()
-    final_list = remove_duplicate_entries(info_set)
+class GenshinImpactDP(DataProcessor):
+    def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
+        source_classes = {
+            "PocketTactics": PocketTactics,
+            "Game8": Game8,
+            "RockPaperShotgun": RockPaperShotgun,
+            "VG247": VG247
+        }
 
-    logger.info(f"Total list of codes: {len(final_list)}")
+        final_list = self._get_data_list(
+            sources,
+            source_classes,
+            code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}"
+        )
 
-    return final_list
+        if final_list:
+            logger.info(f"Total list of codes: {len(final_list)}")
 
+        return final_list
 
-def get_data_list() -> List[Dict[str, str | List]]:
-    info_list = [PocketTactics(), Game8(), RockPaperShotgun(), VG247()]
+    def get_sources(self, config_path: str) -> List[str]:
+        source_key = "gi_sources"
 
-    return info_list
+        config = super().get_sources(config_path, source_key)
 
+        sources = config['sources'][source_key]
+        logger.debug(f"Sources retrieved: {sources}")
 
-def remove_duplicate_entries(sources: List[Dict[str, str | List]]) -> List[Dict[str, str]]:
-    unique_list = set()
-    final_list = []
-    total_duplicate_codes = 0
+        return sources
 
-    logger.info(f"Removing potential duplicate code entries from {len(sources)} sources")
-
-    for source in sources:
-        logger.debug(f"Processing source: {source['source_name']}")
-        code_list = source['code_list']
-
-        if not code_list:
-            continue
-
-        for entry in code_list:
-            code = entry["code"]
-
-            if code not in unique_list:
-                unique_list.add(code)
-
-                code_info = {
-                    "source_name": source["source_name"],
-                    "source_url": source["source_url"],
-                    "code": code,
-                    "reward_desc": entry["reward_desc"],
-                    "code_link": f"https://genshin.hoyoverse.com/en/gift?code={code}"
-                }
-
-                final_list.append(code_info)
-                logger.debug(f"Skipping {code} ({source['source_name']}) as it is unique")
-            else:
-                total_duplicate_codes += 1
-                logger.debug(f"Duplicate code found: {code} ({source['source_name']})")
-
-    logger.info(f"Removed {total_duplicate_codes} duplicate codes")
-
-    return final_list
+    def _get_data_list(
+            self,
+            sources: List[str],
+            source_classes: Dict[str, Type],
+            code_link_template: str
+    ) -> List[Dict[str, str | List]] | None:
+        return super()._get_data_list(sources, source_classes, code_link_template)
