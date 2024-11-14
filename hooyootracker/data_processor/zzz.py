@@ -1,17 +1,17 @@
 from typing import Dict, List, Type
-from hooyootracker.extractor.zzz import (
+from hooyootracker.scraper.zzz import (
     Game8,
     PocketTactics,
     Polygon,
     VG247
 )
 from hooyootracker.logger import Logger
-from ._base import BaseDataProcessor
+from ._base import DataProcessor
 
 logger = Logger()
 
 
-class ZenlessZoneZeroDP(BaseDataProcessor):
+class ZenlessZoneZeroDP(DataProcessor):
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
         source_classes = {
             "PocketTactics": PocketTactics,
@@ -20,7 +20,11 @@ class ZenlessZoneZeroDP(BaseDataProcessor):
             "VG247": VG247
         }
 
-        final_list = self._get_data_list(sources, source_classes, code_link_template="https://zenless.hoyoverse.com/redemption?code={code}")
+        final_list = self._get_data_list(
+            sources,
+            source_classes,
+            code_link_template="https://zenless.hoyoverse.com/redemption?code={code}"
+        )
 
         if final_list:
             logger.info(f"Total list of codes: {len(final_list)}")
@@ -37,5 +41,10 @@ class ZenlessZoneZeroDP(BaseDataProcessor):
 
         return sources
 
-    def _get_data_list(self, sources: List[str], source_classes: Dict[str, Type], code_link_template: str) -> List[Dict[str, str | List]] | None:
+    def _get_data_list(
+            self,
+            sources: List[str],
+            source_classes: Dict[str, Type],
+            code_link_template: str
+    ) -> List[Dict[str, str | List]] | None:
         return super()._get_data_list(sources, source_classes, code_link_template)

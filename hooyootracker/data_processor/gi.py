@@ -1,17 +1,17 @@
 from typing import Dict, List, Type
-from hooyootracker.extractor.gi import (
+from hooyootracker.scraper.gi import (
     Game8,
     PocketTactics,
     RockPaperShotgun,
     VG247
 )
 from hooyootracker.logger import Logger
-from ._base import BaseDataProcessor
+from ._base import DataProcessor
 
 logger = Logger()
 
 
-class GenshinImpactDP(BaseDataProcessor):
+class GenshinImpactDP(DataProcessor):
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
         source_classes = {
             "PocketTactics": PocketTactics,
@@ -20,7 +20,11 @@ class GenshinImpactDP(BaseDataProcessor):
             "VG247": VG247
         }
 
-        final_list = self._get_data_list(sources, source_classes, code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}")
+        final_list = self._get_data_list(
+            sources,
+            source_classes,
+            code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}"
+        )
 
         if final_list:
             logger.info(f"Total list of codes: {len(final_list)}")
@@ -37,5 +41,10 @@ class GenshinImpactDP(BaseDataProcessor):
 
         return sources
 
-    def _get_data_list(self, sources: List[str], source_classes: Dict[str, Type], code_link_template: str) -> List[Dict[str, str | List]] | None:
+    def _get_data_list(
+            self,
+            sources: List[str],
+            source_classes: Dict[str, Type],
+            code_link_template: str
+    ) -> List[Dict[str, str | List]] | None:
         return super()._get_data_list(sources, source_classes, code_link_template)

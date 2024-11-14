@@ -2,7 +2,7 @@ import re
 import requests
 from bs4 import BeautifulSoup, Tag
 from typing import List
-from hooyootracker.extractor._exceptions.handler import (
+from hooyootracker.scraper._exceptions.handler import (
     handle_source_exc,
     handle_data_extraction_exc
 )

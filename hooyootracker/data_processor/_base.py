@@ -7,7 +7,7 @@ from hooyootracker.logger import Logger
 logger = Logger()
 
 
-class BaseDataProcessor:
+class DataProcessor:
     @abstractmethod
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
         """
@@ -18,11 +18,15 @@ class BaseDataProcessor:
     @abstractmethod
     def get_sources(self, config_path: str, source_key: str) -> Dict[str, Any]:
         """
-        Retrieves a list of source names specified from the config path and returns a
-        list of strings containing source names.
+        This super method parses the config file specified from the path and
+        loads it.
 
-        If there is an error parsing the config file, it will return a None
-        and nothing will be processed.
+        The child method retrieves a list of source names from the config
+        file returned by the super method, which then returns a list of strings
+        containing source names.
+
+        If there is an error parsing the config file, this will result in
+        exception, thus halting the program.
         """
 
         logger.debug(f"Attempting to open config file at: {config_path}")
@@ -36,7 +40,17 @@ class BaseDataProcessor:
             logger.critical(f"Error parsing config file: {e}", exc_info=True)
             raise FileParsingError from e
 
-    def _get_data_list(self, sources: List[str], source_classes: Dict[str, Type], code_link_template: str) -> List[Dict[str, str | List]] | None:
+    def _get_data_list(
+            self,
+            sources: List[str],
+            source_classes: Dict[str, Type],
+            code_link_template: str
+    ) -> List[Dict[str, str | List]] | None:
+        """
+        Processes all the data based on specified sources and returns the
+        procesed data into a list of dictionaries containing the code,
+        reward details, and source details.
+        """
         if sources is None:
             logger.info("No list of sources have been passed. Nothing will be processed.")
             return None
@@ -55,7 +69,11 @@ class BaseDataProcessor:
 
         return clean_list
 
-    def _remove_duplicate_entries(self, sources: List[Dict[str, str | List]], code_link_template: str) -> List[Dict[str, str]]:
+    def _remove_duplicate_entries(
+            self,
+            sources: List[Dict[str, str | List]],
+            code_link_template: str
+    ) -> List[Dict[str, str]]:
         if sources is None:
             return None
 
@@ -70,6 +88,7 @@ class BaseDataProcessor:
                     code = entry["code"]
 
                     code_info = self._get_code_info(source, entry, code_link_template, code)
+
                     clean_list.append(code_info)
 
         elif len(sources) >= 2:
@@ -102,7 +121,14 @@ class BaseDataProcessor:
 
         return clean_list
 
-    def _get_code_info(self, source, entry, code_link_template, code):
+    def _get_code_info(
+            self,
+            source: Dict[str, str | List],
+            entry: Dict[str, str],
+            code_link_template: str,
+            code: str
+    ) -> Dict[str, str]:
+
         code_info = {
             "source_name": source["source_name"],
             "source_url": source["source_url"],
