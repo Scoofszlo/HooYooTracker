@@ -19,6 +19,8 @@ DEFAULT_ZZZ_SOURCES = [
 PROGRAM_DATA_DIR = "program_data"
 # Path to the configuration file
 CONFIG_FILE_PATH = PROGRAM_DATA_DIR + "/config.toml"
+# Directory for logs
+LOG_DIR = PROGRAM_DATA_DIR + "/logs/"
 
 # Default configuration settings
 DEFAULT_CONFIG = {
