@@ -27,7 +27,7 @@ class ZenlessZoneZeroDP(DataProcessor):
         )
 
         if final_list:
-            logger.info(f"Total list of codes: {len(final_list)}")
+            logger.info(f"Total number of codes: {len(final_list)}")
 
         return final_list
 

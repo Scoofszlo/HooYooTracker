@@ -117,7 +117,7 @@ class DataProcessor:
                         total_duplicate_codes += 1
                         logger.debug(f"Duplicate code found: {code} ({source['source_name']})")
 
-            logger.info(f"Removed {total_duplicate_codes} duplicate codes")
+            logger.debug(f"Removed {total_duplicate_codes} duplicate codes")
 
         return clean_list
 
