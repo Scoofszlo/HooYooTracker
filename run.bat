@@ -23,4 +23,4 @@ IF %ERRORLEVEL% NEQ 0 (
 
 :: Run the web application from webapp.py
 echo Running the web application...
-python webapp.py
+python -m hooyootracker

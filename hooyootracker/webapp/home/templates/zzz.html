@@ -1,27 +1,26 @@
 {% extends "base.html" %}
 
+{% block gi_css %}
+<link href="{{ url_for('static', filename='zzz.css') }}" rel="stylesheet" />
+{% endblock %}
+
 {% block content %}
 <div class="body_content">
     <div class="bc_code_list_container">
         <h1>List of Codes</h1>
         <p>Last refreshed: <time datetime="" id="bc_target_date"></time><span id="bc_time_interval"></span><span id="bc_show_current_time_and_date"></span></p>
         <div class="bc_cards_container">
-            <p>Work in progress</p>
-            <!-- {% for entry in code_list %}
+            {% for entry in code_list %}
             <div class="bc_card">
-                <div>
-                    <p class="bc_reward_code"><a href="https://genshin.hoyoverse.com/en/gift?code={{entry.code}}" target="_blank">{{entry.code}}</a></p>
-                    <p class="bc_reward_details">{{entry.reward_desc}}</p>
-                    <div class="bc_date_container" style="display: none;">
-                        <p class="bc_release_date" style="display: none;"></p>
-                        <p class="bc_expiration_date" style="display: none;"></p>
-                    </div>
+                <div class="bc_code_details_container">
+                    <p class="bc_reward_code_wrapper"><a href="https://zenless.hoyoverse.com/redemption?code={{entry.code}}" target="_blank">{{entry.code}}</a></p>
+                    <p class="bc_reward_details_wrapper">{{entry.reward_desc}}</p>
                 </div>
-                <div>
+                <div class="bc_reward_code_status_wrapper">
                     <span class="bc_reward_code_status">Available</span>
                 </div>
             </div>
-            {% endfor %} -->
+            {% endfor %}
         </div>
     </div>
 </div>
