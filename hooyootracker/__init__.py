@@ -4,6 +4,7 @@ from .constants import (
     PROGRAM_DATA_DIR,
     CONFIG_FILE_PATH,
     LOG_DIR,
+    DB_FILE_PATH,
     DEFAULT_CONFIG
 )
 
@@ -24,10 +25,17 @@ def _init_log_dir() -> None:
         os.mkdir(LOG_DIR)
 
 
+def _init_db() -> None:
+    if not os.path.isfile(DB_FILE_PATH):
+        with open(DB_FILE_PATH, 'w') as file:
+            pass
+
+
 def run():
     _init_program_data_dir()
     _init_file_config()
     _init_log_dir()
+    _init_db()
 
 
 run()
