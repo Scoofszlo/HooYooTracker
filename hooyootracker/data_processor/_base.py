@@ -44,7 +44,8 @@ class DataProcessor:
             self,
             sources: List[str],
             source_classes: Dict[str, Type],
-            code_link_template: str
+            code_link_template: str,
+            game: str
     ) -> List[Dict[str, str | List]] | None:
         """
         Processes all the data based on specified sources and returns the
@@ -65,14 +66,15 @@ class DataProcessor:
             else:
                 logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
 
-        clean_list = self._remove_duplicate_entries(info_list, code_link_template)
+        clean_list = self._remove_duplicate_entries(info_list, code_link_template, game)
 
         return clean_list
 
     def _remove_duplicate_entries(
             self,
             sources: List[Dict[str, str | List]],
-            code_link_template: str
+            code_link_template: str,
+            game: str
     ) -> List[Dict[str, str]]:
         if sources is None:
             return None
@@ -87,7 +89,7 @@ class DataProcessor:
                 for entry in source['code_list']:
                     code = entry["code"]
 
-                    code_info = self._get_code_info(source, entry, code_link_template, code)
+                    code_info = self._get_code_info(source, entry, code_link_template, code, game)
 
                     clean_list.append(code_info)
 
@@ -109,7 +111,7 @@ class DataProcessor:
                     if code not in unique_list:
                         unique_list.add(code)
 
-                        code_info = self._get_code_info(source, entry, code_link_template, code)
+                        code_info = self._get_code_info(source, entry, code_link_template, code, game)
 
                         clean_list.append(code_info)
                         logger.debug(f"Skipping {code} ({source['source_name']}) as it is unique")
@@ -126,10 +128,12 @@ class DataProcessor:
             source: Dict[str, str | List],
             entry: Dict[str, str],
             code_link_template: str,
-            code: str
+            code: str,
+            game: str
     ) -> Dict[str, str]:
 
         code_info = {
+            "game": game,
             "source_name": source["source_name"],
             "source_url": source["source_url"],
             "code": code,

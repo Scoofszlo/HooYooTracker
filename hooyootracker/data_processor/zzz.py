@@ -47,4 +47,4 @@ class ZenlessZoneZeroDP(DataProcessor):
             source_classes: Dict[str, Type],
             code_link_template: str
     ) -> List[Dict[str, str | List]] | None:
-        return super()._get_data_list(sources, source_classes, code_link_template)
+        return super()._get_data_list(sources, source_classes, code_link_template, game="zzz")
