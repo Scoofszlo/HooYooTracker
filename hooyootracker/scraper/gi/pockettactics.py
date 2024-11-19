@@ -52,7 +52,8 @@ class PocketTactics(DataExtractor):
     # not enough
     def _process_multiple_lists(self, list_container: Tag) -> List[Tag]:
         first_code_list = list_container.find_all('ul')[0]
-        second_code_list = list_container.find_all('ul')[1]
+        # second_code_list = list_container.find_all('ul')[1]
 
-        code_list = [first_code_list, second_code_list]
+        code_list = [first_code_list]
+        # code_list = [first_code_list, second_code_list]
         return code_list
