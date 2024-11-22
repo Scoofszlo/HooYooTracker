@@ -1,4 +1,3 @@
-setDateAndTimeNow();
 showTimeAndDate();
 timeAndDateInterval();
 dynamicRewardStatusColor();
@@ -36,15 +35,6 @@ function dynamicRewardStatusColor() {
         }
     }
 }
-
-function setDateAndTimeNow() {
-    var targetDateElement = document.getElementById("bc_target_date");
-    if (targetDateElement) {
-        var currentDate = new Date();
-        targetDateElement.dateTime = currentDate.toISOString();
-    }
-}
-
 function timeAndDateInterval() {
     var currentLocalDate = new Date();
     var targetDate = new Date(document.getElementById('bc_target_date').dateTime);

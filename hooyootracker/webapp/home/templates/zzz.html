@@ -7,10 +7,17 @@
 {% block content %}
 <div class="body_content">
     <div class="bc_code_list_container">
-        <h1>List of Codes</h1>
-        <p>Last refreshed: <time datetime="" id="bc_target_date"></time><span id="bc_time_interval"></span><span id="bc_show_current_time_and_date"></span></p>
+        <div class="bc_header_container">
+            <div>
+                <h1>List of Codes</h1>
+                <p>Last checked: <time datetime="{{data.metadata.modified_date}}" id="bc_target_date"></time><span id="bc_time_interval"></span><span id="bc_show_current_time_and_date"></span></p>
+            </div>
+            <form method="POST" action="/zzz" class="bc_form_container">
+                <input type="submit" value="Refresh data" name="refresh_data_zzz"/>
+            </form>
+        </div>
         <div class="bc_cards_container">
-            {% for entry in code_list %}
+            {% for entry in data.entries_list %}
             <div class="bc_card">
                 <div class="bc_code_details_container">
                     <p class="bc_reward_code_wrapper"><a href="https://zenless.hoyoverse.com/redemption?code={{entry.code}}" target="_blank">{{entry.code}}</a></p>
