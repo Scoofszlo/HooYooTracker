@@ -1,4 +1,3 @@
-from .gi import GenshinImpactDP
-from .zzz import ZenlessZoneZeroDP
+from .presenter import DataPresenter
 
-__all__ = ["GenshinImpactDP", "ZenlessZoneZeroDP"]
+__all__ = ["DataPresenter"]
