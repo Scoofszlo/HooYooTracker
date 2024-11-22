@@ -31,13 +31,19 @@ class Database:
             self._delete_records(game)
 
         for entry in code_list:
-            self._insert_entry(entry, metadata_id)
+            self._insert_entry(entry, metadata_id, game)
 
-    def get_data(self, table: str, game: str) -> List[Tuple[Any, ...]]:
-        query = f"SELECT * FROM {table} WHERE game = ?;"
+    def get_data(self, game: str) -> List[Tuple[Any, ...]]:
+        metadata_query = "SELECT * FROM metadata WHERE game = ?;"
+        code_entries_query = "SELECT * FROM code_entries WHERE game = ?;"
 
-        self.cursor.execute(query, (game,))
-        data = self.cursor.fetchall()
+        self.cursor.execute(metadata_query, (game,))
+        metadata = self.cursor.fetchall()
+
+        self.cursor.execute(code_entries_query, (game,))
+        code_entries = self.cursor.fetchall()
+
+        data = metadata, code_entries
 
         return data
 
@@ -82,6 +88,7 @@ class Database:
                         game INTEGER NOT NULL,
                         code TEXT NOT NULL,
                         reward_details TEXT NOT NULL,
+                        code_link TEXT NOT NULL,
                         source_name TEXT NOT NULL,
                         source_url TEXT NOT NULL,
                         FOREIGN KEY (metadata_id) REFERENCES metadata(metadata_id)
@@ -110,20 +117,20 @@ class Database:
 
         logger.info(f"Metadata details updated successfully. (metadata_id: {metadata_id}, game: {game}, modified_date: {modified_date})")
 
-    def _insert_entry(self, entry: Dict[str, str], metadata_id: int) -> None:
+    def _insert_entry(self, entry: Dict[str, str], metadata_id: int, game: str) -> None:
         logger.debug(f"Inserting entry: {entry}")
 
-        game = entry['game']
         code = entry['code']
         reward_details = entry['reward_desc']
+        code_link = entry['code_link']
         source_name = entry['source_name']
         source_url = entry['source_url']
 
         query = """
-                INSERT INTO code_entries (metadata_id, game, code, reward_details, source_name, source_url)
-                VALUES (?, ?, ?, ?, ?, ?);
+                INSERT INTO code_entries (metadata_id, game, code, reward_details, code_link, source_name, source_url)
+                VALUES (?, ?, ?, ?, ?, ?, ?);
                 """
-        self.cursor.execute(query, (metadata_id, game, code, reward_details, source_name, source_url))
+        self.cursor.execute(query, (metadata_id, game, code, reward_details, code_link, source_name, source_url))
         self.connection.commit()
 
     def _delete_records(self, game: str) -> None:
