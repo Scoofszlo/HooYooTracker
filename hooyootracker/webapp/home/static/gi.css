@@ -27,6 +27,38 @@
     color: rgb(156, 156, 156);
 }
 
+.bc_header_container {
+    margin-top: 20px;
+    display: flex;
+}
+
+.bc_header_container > div:nth-of-type(1) {
+    width: 80%;
+}
+
+.bc_form_container {
+    display: flex;
+    justify-content: end;
+    align-self: center;
+    width: 20%;
+}
+
+.bc_form_container > input {
+    background-color: rgb(38, 38, 38);
+    padding: 10px 25px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-size: 14px;
+    align-self: flex-start;
+}
+
+.bc_form_container > input:hover {
+    cursor: pointer;
+    transition: all .2s ease;
+    background-color: rgb(121, 121, 121);
+}
+
 .bc_cards_container {
     display: flex;
     flex-wrap: wrap;
@@ -102,6 +134,24 @@
 @media only screen and (max-width: 1000px) {
     .bc_code_list_container {
         padding: 50px;
+    }
+
+    .bc_header_container {
+        flex-direction: column;
+    }
+
+    .bc_header_container > div:nth-of-type(1) {
+        width: 100%;
+    }
+    
+    .bc_form_container {
+        display: flex;
+        width: 100%;
+        justify-content: start;
+    }
+
+    .bc_form_container > input {
+        margin-top: 10px;
     }
 }
 
