@@ -154,6 +154,10 @@ class DataModel:
             self,
             entries_list: List[Tuple[Any, ...]]
     ) -> List[Dict[str, str]]:
+        # Return a list containing no values if there is nothing to process
+        if not entries_list[0] and not entries_list[1]:
+            return []
+
         data = {
             "metadata": {
                 "metadata_id": entries_list[0][0][0],
