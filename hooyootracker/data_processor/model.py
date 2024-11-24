@@ -2,7 +2,7 @@ import toml
 from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
 from hooyootracker.db.model import Database
-from hooyootracker.exceptions.data_processor import FileParsingError
+from hooyootracker.data_processor._exceptions import FileParsingError
 from hooyootracker.logger import Logger
 from hooyootracker.scraper import gi, zzz
 from hooyootracker.scraper.gi._base import DataExtractor
