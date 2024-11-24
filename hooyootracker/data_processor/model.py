@@ -66,7 +66,7 @@ class DataModel:
             logger.info("No list of sources have been passed. Nothing will be processed.")
             return None
         else:
-            logger.info(f"Processing {len(sources)} source{'s' if len(sources) > 1 else ''}")
+            logger.info(f"Getting latest changes from {len(sources)} source{'s' if len(sources) > 1 else ''} ")
 
         entries_list = []
 
@@ -198,7 +198,7 @@ class GenshinImpactDM(DataModel):
             self.entries_list = self._restructure_as_dict(self.entries_list)
 
             if self.entries_list:
-                logger.info(f"Total number of codes: {len(self.entries_list)}")
+                logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
 
@@ -224,7 +224,7 @@ class GenshinImpactDM(DataModel):
         self.entries_list = self._restructure_as_dict(self.entries_list)
 
         if self.entries_list:
-            logger.info(f"Total number of codes: {len(self.entries_list)}")
+            logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
 
@@ -255,7 +255,7 @@ class ZenlessZoneZeroDM(DataModel):
             self.entries_list = self._restructure_as_dict(self.entries_list)
 
             if self.entries_list:
-                logger.info(f"Total number of codes: {len(self.entries_list)}")
+                logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
 
@@ -281,7 +281,7 @@ class ZenlessZoneZeroDM(DataModel):
         self.entries_list = self._restructure_as_dict(self.entries_list)
 
         if self.entries_list:
-            logger.info(f"Total number of codes: {len(self.entries_list)}")
+            logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
 

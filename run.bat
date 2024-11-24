@@ -19,8 +19,11 @@ IF %ERRORLEVEL% NEQ 0 (
     :: Install dependencies using poetry
     echo Installing dependencies with Poetry...
     poetry install
+) ELSE (
+    echo Poetry is already installed
 )
 
-:: Run the web application from webapp.py
-echo Running the web application...
+:: Run the HooYooTracker package
+echo Starting HooYooTracker...
+echo.
 python -m hooyootracker

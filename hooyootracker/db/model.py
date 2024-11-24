@@ -76,9 +76,7 @@ class Database:
             self.cursor.execute(query)
             self.connection.commit()
 
-            logger.info(f"Creating database table 'metadata' success. (query: {query})")
-        else:
-            logger.info("Table 'metadata' already exist. Skipping")
+            logger.debug("Creating database table 'metadata' success.")
 
         if not self._check_table_exists(table_name="code_entries"):
             query = """
@@ -97,9 +95,7 @@ class Database:
             self.cursor.execute(query)
             self.connection.commit()
 
-            logger.info(f"Creating database table 'code_entries' success. (query: {query})")
-        else:
-            logger.info("Table 'code_entries' already exist. Skipping")
+            logger.debug("Creating database table 'code_entries' success.")
 
     def _update_metadata_details(
             self,
@@ -107,7 +103,7 @@ class Database:
             game: str,
             modified_date: str
     ) -> None:
-        logger.info(f"Existing metadetails found associated with {metadata_id}. Updating data...")
+        logger.debug(f"Existing metadetails found associated with {metadata_id}. Updating data...")
 
         query = """
                 UPDATE metadata SET modified_date = ? WHERE game = ?;
@@ -115,7 +111,7 @@ class Database:
         self.cursor.execute(query, (modified_date, game,))
         self.connection.commit()
 
-        logger.info(f"Metadata details updated successfully. (metadata_id: {metadata_id}, game: {game}, modified_date: {modified_date})")
+        logger.debug(f"Metadata details updated successfully. (metadata_id: {metadata_id}, game: {game}, modified_date: {modified_date})")
 
     def _insert_entry(self, entry: Dict[str, str], metadata_id: int, game: str) -> None:
         logger.debug(f"Inserting entry: {entry}")
@@ -134,7 +130,7 @@ class Database:
         self.connection.commit()
 
     def _delete_records(self, game: str) -> None:
-        logger.info(f"Deleting all records associated with 'game = {game}'")
+        logger.debug(f"Deleting all records associated with 'game = {game}'")
 
         query = """
                 DELETE from code_entries WHERE game = ?;
@@ -142,7 +138,7 @@ class Database:
         self.cursor.execute(query, (game,))
 
         self.connection.commit()
-        logger.info("Deleting code entries successfully")
+        logger.debug("Deleting code entries successfully")
 
     def _check_table_exists(self, table_name: str) -> None:
         query = """

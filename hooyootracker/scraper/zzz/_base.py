@@ -52,7 +52,7 @@ class DataExtractor(ABC):
             "code_list": code_list
         }
 
-        logger.info(f"Extracted {success_ctr-failed_ctr}/{success_ctr} entries from {source_name}")
+        logger.debug(f"Extracted {success_ctr-failed_ctr}/{success_ctr} entries from {source_name}")
 
     @abstractmethod
     def _get_source_data(self, source_url: str) -> Optional[List[Tag]]:
