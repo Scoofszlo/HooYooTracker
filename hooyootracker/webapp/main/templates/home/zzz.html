@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "home/base.html" %}
 
 {% block gi_css %}
 <link href="{{ url_for('static', filename='zzz.css') }}" rel="stylesheet" />
@@ -13,7 +13,7 @@
                 <p>Last checked: <time datetime="{{data.metadata.modified_date}}" id="bc_target_date"></time><span id="bc_time_interval"></span><span id="bc_show_current_time_and_date"></span></p>
             </div>
             <form method="POST" action="/zzz" class="bc_form_container">
-                <input type="submit" value="Refresh data" name="refresh_data_zzz"/>
+                <input type="submit" value="Refresh data" name="refresh_data"/>
             </form>
         </div>
         <div class="bc_cards_container">
