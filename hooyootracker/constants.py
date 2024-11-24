@@ -29,5 +29,8 @@ DEFAULT_CONFIG = {
     "sources": {
         "gi_sources": DEFAULT_GI_SOURCES,
         "zzz_sources": DEFAULT_ZZZ_SOURCES
+    },
+    "logger": {
+        "debug_level": "INFO"
     }
 }
