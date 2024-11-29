@@ -1,6 +1,7 @@
 import webbrowser
 from waitress import serve
-from hooyootracker.webapp.home import create_app
+from hooyootracker.logger import Logger
+from hooyootracker.webapp.main import create_app
 
 
 def run() -> None:

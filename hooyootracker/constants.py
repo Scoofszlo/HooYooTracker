@@ -21,11 +21,16 @@ PROGRAM_DATA_DIR = "program_data"
 CONFIG_FILE_PATH = PROGRAM_DATA_DIR + "/config.toml"
 # Directory for logs
 LOG_DIR = PROGRAM_DATA_DIR + "/logs/"
+# Directory for database
+DB_FILE_PATH = PROGRAM_DATA_DIR + "/data.db"
 
 # Default configuration settings
 DEFAULT_CONFIG = {
     "sources": {
         "gi_sources": DEFAULT_GI_SOURCES,
         "zzz_sources": DEFAULT_ZZZ_SOURCES
+    },
+    "logger": {
+        "debug_level": "INFO"
     }
 }

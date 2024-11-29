@@ -1,20 +1,25 @@
 import logging
 import logging.handlers
-from hooyootracker.constants import LOG_DIR
+import toml
+from typing import Any, Dict
+from hooyootracker.constants import CONFIG_FILE_PATH, LOG_DIR
 
 
 class Logger:
     _instance = None
 
-    def __new__(cls, console_handler_level: str = "INFO") -> logging.Logger:
+    def __new__(cls) -> logging.Logger:
         if cls._instance is None:
-            console_handler_level = cls.identify_console_handler_level(console_handler_level)
             cls._instance = super(Logger, cls).__new__(cls)
-            cls._instance.__init__(console_handler_level)
+            cls._instance.__init__(cls)
         return cls._instance.logger
 
-    def __init__(self, console_handler_level: int):
+    def __init__(self, cls):
         if not hasattr(self, 'logger'):
+            # Initialize variables for logger settings
+            logger_settings = cls._get_logger_settings()
+            console_handler_level = cls._identify_console_handler_level(logger_settings)
+
             self.logger = logging.getLogger(__name__)
             self.logger.setLevel("DEBUG")
             self.logger.propagate = False
@@ -42,8 +47,9 @@ class Logger:
             self.logger.addHandler(file_handler)
 
     @staticmethod
-    def identify_console_handler_level(console_handler_level: str) -> int:
-        console_handler_level = console_handler_level.upper()
+    def _identify_console_handler_level(logger_settings: Dict[str, Any]) -> int:
+        logger_level = logger_settings["debug_level"]
+        console_handler_level = logger_level.upper()
 
         if console_handler_level == "INFO":
             return logging.INFO
@@ -58,3 +64,9 @@ class Logger:
         else:
             logging.getLogger(__name__).warning(f"Invalid logging level '{console_handler_level}' provided. Defaulting to INFO.")
             return logging.INFO
+
+    @staticmethod
+    def _get_logger_settings() -> Dict[str, Any]:
+        with open(CONFIG_FILE_PATH, 'r') as file:
+            config = toml.load(file)
+        return config["logger"]
