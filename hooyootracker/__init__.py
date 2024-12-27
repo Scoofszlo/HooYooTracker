@@ -27,7 +27,7 @@ def _init_log_dir() -> None:
 
 def _init_db() -> None:
     if not os.path.isfile(DB_FILE_PATH):
-        with open(DB_FILE_PATH, 'w') as file:
+        with open(DB_FILE_PATH, 'w'):
             pass
 
 

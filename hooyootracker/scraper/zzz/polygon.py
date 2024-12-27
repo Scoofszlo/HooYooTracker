@@ -35,6 +35,6 @@ class Polygon(DataExtractor):
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_desc")
     def _get_reward_desc(self, entry: Tag) -> str:
         code_and_reward_list = entry.find('span').text
-        reward_desc = re.split(r"\s+\(", code_and_reward_list)
+        reward_desc = re.split(r"\s+\(", code_and_reward_list)[1]
 
         return reward_desc
