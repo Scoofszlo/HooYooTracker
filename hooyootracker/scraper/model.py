@@ -12,20 +12,26 @@ class CodeEntry:
     code: str
     reward_details: str
 
+@dataclass
+class CodeEntriesList:
+    source_name: str
+    source_url: str
+    code_list: List[CodeEntry]
+
 
 class Scraper:
     def __init__(self, source_name: str, source_url: str):
-        self.code_entries_list: Dict[str, Union[str, List[CodeEntry]]] = {
-            "source_name": source_name,
-            "source_url": source_url,
-            "code_list": []
-        }
+        self.code_entries_list: CodeEntriesList = CodeEntriesList(
+            source_name=source_name,
+            source_url=source_url,
+            code_list=[]
+        )
 
     def get_data(
             self,
             source_name: str,
             source_url: str
-    ) -> Optional[Dict[str, Union[str, List[CodeEntry]]]]:
+    ) -> Optional[CodeEntriesList]:
         logger.info(f"Getting data from {source_name} ({source_url})")
 
         # Extracts the data from source that has the container containing
@@ -43,7 +49,7 @@ class Scraper:
         for item in source_data:
             extracted_data = self._extract_data(item)
             if extracted_data:
-                self.code_entries_list["code_list"].append(extracted_data)
+                self.code_entries_list.code_list.append(extracted_data)
                 success_ctr += 1
             else:
                 continue
