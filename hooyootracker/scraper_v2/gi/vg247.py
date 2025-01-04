@@ -37,6 +37,10 @@ class VG247(Scraper):
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_details")
     def _get_reward_details(self, entry: Tag) -> str:
         code_and_reward_list = entry.text
-        reward_desc = re.split(r":\s+", code_and_reward_list)[1]
+
+        try:
+            reward_desc = re.split(r":\s+", code_and_reward_list)[1]
+        except Exception:
+            reward_desc = re.split(r"-\s+", code_and_reward_list)[1]
 
         return reward_desc
