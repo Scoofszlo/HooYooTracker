@@ -2,13 +2,13 @@ import re
 import requests
 from typing import List
 from bs4 import BeautifulSoup, Tag
-from hooyootracker.scraper_v2._exceptions.handler import handle_data_extraction_exc, handle_source_exc
-from hooyootracker.scraper_v2.model import Scraper
-from hooyootracker.scraper_v2.source_urls import SOURCE_URLS
+from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
+from hooyootracker.scraper.model import Scraper
+from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
-class Polygon(Scraper):
-    source_name = "Polygon"
+class Game8(Scraper):
+    source_name = "Game8"
     source_url = SOURCE_URLS["zzz"][source_name]
 
     def __init__(self):
@@ -22,19 +22,21 @@ class Polygon(Scraper):
         webpage = requests.get(source_url)
         webpage = BeautifulSoup(webpage.text, 'html.parser')
 
-        list_container = webpage.find('div', class_='_11x6rb9y')
-        code_list = list_container.find('ul')
+        code_list = webpage.find('ul', class_='a-list')
         source_data = code_list.find_all('li')
+
         return source_data
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="code")
     def _get_code(self, entry: Tag) -> str:
-        code = entry.find('a').text
+        code_and_reward_list = entry.text
+
+        code = re.split(r"\s+-\s+", code_and_reward_list)[0]
         return code
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_desc")
     def _get_reward_details(self, entry: Tag) -> str:
-        code_and_reward_list = entry.find('span').text
-        reward_details = re.split(r"\s+\(", code_and_reward_list)[1]
+        code_and_reward_list = entry.text
 
+        reward_details = re.split(r"\s+-\s+", code_and_reward_list)[1]
         return reward_details

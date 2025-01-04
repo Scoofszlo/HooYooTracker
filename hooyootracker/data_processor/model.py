@@ -4,8 +4,8 @@ from typing import Any, Dict, List, Tuple
 from hooyootracker.db.model import Database
 from hooyootracker.data_processor._exceptions import FileParsingError
 from hooyootracker.logger import Logger
-from hooyootracker.scraper_v2 import gi, zzz
-from hooyootracker.scraper_v2.model import Scraper
+from hooyootracker.scraper import gi, zzz
+from hooyootracker.scraper.model import Scraper
 
 logger = Logger()
 
