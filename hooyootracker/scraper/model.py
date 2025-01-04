@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Dict, List, Optional, Union
+from typing import List, Optional
 from dataclasses import dataclass
 from bs4 import Tag
 from hooyootracker.logger import Logger
@@ -83,7 +83,7 @@ class Scraper:
 
     @abstractmethod
     def _get_code(self, entry: Tag) -> Optional[str]:
-        """Extracts the code and returns it as a string"""
+        """Extracts the code and returns it as a string."""
         pass
 
     @abstractmethod
