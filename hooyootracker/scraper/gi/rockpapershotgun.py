@@ -1,24 +1,24 @@
 import re
 import requests
+from typing import List, Optional
 from bs4 import BeautifulSoup, Tag
-from typing import List
-from hooyootracker.scraper._exceptions.handler import (
-    handle_source_exc,
-    handle_data_extraction_exc
-)
-from ._source_url import SOURCE_URLS
-from ._base import DataExtractor
+from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
+from hooyootracker.scraper.model import Scraper
+from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
-class RockPaperShotgun(DataExtractor):
+class RockPaperShotgun(Scraper):
     source_name = "RockPaperShotgun"
-    source_url = SOURCE_URLS[source_name]
+    source_url = SOURCE_URLS["gi"][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)
 
+    def get_data(self):
+        return super().get_data(self.source_name, self.source_url)
+
     @handle_source_exc(source_name=source_name)
-    def _get_source_data(self, source_url: str) -> List[Tag]:
+    def _get_source_data(self, source_url: str) -> Optional[List[Tag]]:
         webpage = requests.get(source_url)
         webpage = BeautifulSoup(webpage.text, 'html.parser')
 
@@ -31,11 +31,12 @@ class RockPaperShotgun(DataExtractor):
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="code")
     def _get_code(self, entry: Tag) -> str:
         code = entry.find('strong').text
+
         return code
 
-    @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_desc")
-    def _get_reward_desc(self, entry: Tag) -> str:
+    @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_details")
+    def _get_reward_details(self, entry: Tag) -> str:
         code_and_reward_list = entry.text
-
         reward_desc = re.split(r":\s+", code_and_reward_list)[1]
+
         return reward_desc

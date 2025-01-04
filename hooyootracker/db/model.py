@@ -117,7 +117,7 @@ class Database:
         logger.debug(f"Inserting entry: {entry}")
 
         code = entry['code']
-        reward_details = entry['reward_desc']
+        reward_details = entry['reward_details']
         code_link = entry['code_link']
         source_name = entry['source_name']
         source_url = entry['source_url']

@@ -5,7 +5,7 @@ from hooyootracker.db.model import Database
 from hooyootracker.data_processor._exceptions import FileParsingError
 from hooyootracker.logger import Logger
 from hooyootracker.scraper import gi, zzz
-from hooyootracker.scraper.gi._base import DataExtractor
+from hooyootracker.scraper.model import Scraper
 
 logger = Logger()
 
@@ -30,7 +30,7 @@ class DataModel:
         """
 
     @abstractmethod
-    def _get_scraper_classes(self) -> Dict[str, DataExtractor]:
+    def _get_scraper_classes(self) -> Dict[str, Scraper]:
         pass
 
     def _get_config(self, config_path: str) -> Dict[str, Any]:
@@ -54,7 +54,7 @@ class DataModel:
     def _get_data_list(
             self,
             sources: List[str],
-            source_classes: Dict[str, DataExtractor],
+            source_classes: Dict[str, Scraper],
             code_link_template: str,
     ) -> List[Dict[str, str | List]] | None:
         """
@@ -72,7 +72,7 @@ class DataModel:
 
         for source in sources:
             if source in source_classes:
-                entries_list.append(source_classes[source]())
+                entries_list.append(source_classes[source]().get_data())
             else:
                 logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
 
@@ -142,7 +142,7 @@ class DataModel:
 
         code_info = {
             "code": code,
-            "reward_desc": entry["reward_desc"],
+            "reward_details": entry["reward_details"],
             "code_link": code_link_template.format(code=code),
             "source_name": source["source_name"],
             "source_url": source["source_url"],
@@ -173,7 +173,7 @@ class DataModel:
                 "source_name": entry[6],
                 "source_url": entry[7],
                 "code": entry[3],
-                "reward_desc": entry[4],
+                "reward_details": entry[4],
                 "code_link": entry[5]
             }
 
@@ -228,7 +228,7 @@ class GenshinImpactDM(DataModel):
 
         return self.entries_list
 
-    def _get_scraper_classes(self) -> Dict[str, DataExtractor]:
+    def _get_scraper_classes(self) -> Dict[str, Scraper]:
         scraper_classes = {
             "PocketTactics": gi.PocketTactics,
             "Game8": gi.Game8,
@@ -285,7 +285,7 @@ class ZenlessZoneZeroDM(DataModel):
 
         return self.entries_list
 
-    def _get_scraper_classes(self) -> Dict[str, DataExtractor]:
+    def _get_scraper_classes(self) -> Dict[str, Scraper]:
         scraper_classes = {
             "PocketTactics": zzz.PocketTactics,
             "Game8": zzz.Game8,
