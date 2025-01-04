@@ -20,6 +20,7 @@ class Scraper:
         # Extracts the data from source that has the container containing
         # the code and its reward details, which then returns a list of Tags
         source_data = self._get_source_data(source_url)
+
         if not source_data:
             return
         else:
@@ -30,7 +31,6 @@ class Scraper:
 
         for item in source_data:
             extracted_data = self._extract_data(item)
-
             if extracted_data:
                 self.code_entries_list["code_list"].append(extracted_data)
                 success_ctr += 1
