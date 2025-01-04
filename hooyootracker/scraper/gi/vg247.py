@@ -36,5 +36,8 @@ class VG247(DataExtractor):
     def _get_reward_desc(self, entry: Tag) -> str:
         code_and_reward_list = entry.text
 
-        reward_desc = re.split(r":\s+", code_and_reward_list)[1]
+        try:
+            reward_desc = re.split(r":\s+", code_and_reward_list)[1]
+        except Exception:
+            reward_desc = re.split(r"-\s+", code_and_reward_list)[1]
         return reward_desc
