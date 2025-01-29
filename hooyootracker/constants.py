@@ -10,7 +10,7 @@ DEFAULT_GI_SOURCES = [
 DEFAULT_ZZZ_SOURCES = [
     "Game8",
     "PocketTactics",
-    "Polygon",
+    # "Polygon",
     "VG247"
 ]
 
