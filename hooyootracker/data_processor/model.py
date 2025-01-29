@@ -72,7 +72,12 @@ class DataModel:
 
         for source in sources:
             if source in source_classes:
-                entries_list.append(source_classes[source]().get_data())
+                entry = source_classes[source]().get_data()
+
+                if entry is None:
+                    continue
+
+                entries_list.append(entry)
             else:
                 logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
 
