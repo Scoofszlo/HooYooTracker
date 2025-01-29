@@ -1,24 +1,24 @@
 import re
 import requests
+from typing import List, Optional
 from bs4 import BeautifulSoup, Tag
-from typing import List
-from hooyootracker.scraper._exceptions.handler import (
-    handle_source_exc,
-    handle_data_extraction_exc
-)
-from ._source_url import SOURCE_URLS
-from ._base import DataExtractor
+from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
+from hooyootracker.scraper.model import Scraper
+from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
-class PocketTactics(DataExtractor):
+class PocketTactics(Scraper):
     source_name = "PocketTactics"
-    source_url = SOURCE_URLS[source_name]
+    source_url = SOURCE_URLS["gi"][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)
 
+    def get_data(self):
+        return super().get_data(self.source_name, self.source_url)
+
     @handle_source_exc(source_name=source_name)
-    def _get_source_data(self, source_url: str) -> List[Tag]:
+    def _get_source_data(self, source_url: str) -> Optional[List[Tag]]:
         webpage = requests.get(source_url)
         webpage = BeautifulSoup(webpage.text, 'html.parser')
 
@@ -41,12 +41,12 @@ class PocketTactics(DataExtractor):
 
         return code
 
-    @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_desc")
-    def _get_reward_desc(self, entry: Tag) -> str:
+    @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_details")
+    def _get_reward_details(self, entry: Tag) -> str:
         code_and_reward_list = entry.text
-        reward_desc = re.split(r"\s+–\s+", code_and_reward_list)[1]
+        reward_details = re.split(r"\s+–\s+", code_and_reward_list)[1]
 
-        return reward_desc
+        return reward_details
 
     # Classes below are necessary when the base class for data scraping is
     # not enough

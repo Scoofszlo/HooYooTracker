@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hooyootracker"
-version = "0.3.1"
+version = "0.3.2"
 description = "A webapp that retrieves redeemable codes from various sources and organize them"
 authors = ["Scoofszlo <scoofszlo@gmail.com>"]
 license = "MIT"

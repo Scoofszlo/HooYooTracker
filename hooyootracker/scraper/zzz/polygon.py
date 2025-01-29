@@ -1,21 +1,21 @@
 import re
 import requests
-from bs4 import BeautifulSoup, Tag
 from typing import List
-from hooyootracker.scraper._exceptions.handler import (
-    handle_source_exc,
-    handle_data_extraction_exc
-)
-from ._source_url import SOURCE_URLS
-from ._base import DataExtractor
+from bs4 import BeautifulSoup, Tag
+from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
+from hooyootracker.scraper.model import Scraper
+from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
-class Polygon(DataExtractor):
+class Polygon(Scraper):
     source_name = "Polygon"
-    source_url = SOURCE_URLS[source_name]
+    source_url = SOURCE_URLS["zzz"][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)
+
+    def get_data(self):
+        return super().get_data(self.source_name, self.source_url)
 
     @handle_source_exc(source_name=source_name)
     def _get_source_data(self, source_url: str) -> List[Tag]:
@@ -33,8 +33,8 @@ class Polygon(DataExtractor):
         return code
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_desc")
-    def _get_reward_desc(self, entry: Tag) -> str:
+    def _get_reward_details(self, entry: Tag) -> str:
         code_and_reward_list = entry.find('span').text
-        reward_desc = re.split(r"\s+\(", code_and_reward_list)[1]
+        reward_details = re.split(r"\s+\(", code_and_reward_list)[1]
 
-        return reward_desc
+        return reward_details
