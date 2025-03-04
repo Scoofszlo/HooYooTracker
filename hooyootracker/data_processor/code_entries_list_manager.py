@@ -7,9 +7,9 @@ from hooyootracker.data_processor.model import (
 )
 
 
-class DataPresenter():
+class CodeEntriesListManager():
     def __init__(self, game: str, config_path: str) -> None:
-        self.controller: DataModel = self._get_data_model_class(game)
+        self.controller: DataModel = self._get_controller_class(game)
         self.sources: List[str] = self.controller.get_sources(config_path)
         self.entries_list: List[Dict[str, str]] = []
 
@@ -23,13 +23,13 @@ class DataPresenter():
         self.entries_list = self.controller.update_data(self.sources)
 
     @staticmethod
-    def _get_data_model_class(game: str) -> DataModel:
+    def _get_controller_class(game: str) -> DataModel:
         try:
-            DATA_MODEL_CLASSES = {
+            CODE_ENTRIES_LIST_CONTROLLER = {
                 "gi": GenshinImpactDM,
                 "zzz": ZenlessZoneZeroDM
             }
 
-            return DATA_MODEL_CLASSES[game](game)
+            return CODE_ENTRIES_LIST_CONTROLLER[game](game)
         except (ValueError, KeyError):
             raise InvalidGameType(game) from None

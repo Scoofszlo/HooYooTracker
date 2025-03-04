@@ -1,13 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from hooyootracker.constants import CONFIG_FILE_PATH
-from hooyootracker.data_processor.presenter import DataPresenter
+from hooyootracker.data_processor.code_entries_list_manager import CodeEntriesListManager
 
 
 bp = Blueprint("pages", __name__)
 
 
 def handle_page_redirect(game, page_title, page_url_name, page_template_url):
-    dp = DataPresenter(
+    dp = CodeEntriesListManager(
         game=game,
         config_path=CONFIG_FILE_PATH
     )
