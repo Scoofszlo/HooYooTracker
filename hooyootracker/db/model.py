@@ -9,7 +9,7 @@ logger = Logger()
 
 class Database:
     def __init__(self) -> None:
-        self.connection = sqlite3.connect(DB_FILE_PATH)
+        self.connection = sqlite3.connect(DB_FILE_PATH, check_same_thread=False)
         self.cursor = self.connection.cursor()
         self._init_tables()
 
