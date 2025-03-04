@@ -1,7 +1,7 @@
 from typing import Dict, List
 from hooyootracker.data_processor._exceptions import InvalidGameType
-from hooyootracker.data_processor.model import (
-    DataModel,
+from hooyootracker.data_processor.code_entries_list_controller import (
+    CodeEntriesListController,
     GenshinImpactDM,
     ZenlessZoneZeroDM
 )
@@ -9,7 +9,7 @@ from hooyootracker.data_processor.model import (
 
 class CodeEntriesListManager():
     def __init__(self, game: str, config_path: str) -> None:
-        self.controller: DataModel = self._get_controller_class(game)
+        self.controller: CodeEntriesListController = self._get_controller_class(game)
         self.sources: List[str] = self.controller.get_sources(config_path)
         self.entries_list: List[Dict[str, str]] = []
 
@@ -23,7 +23,7 @@ class CodeEntriesListManager():
         self.entries_list = self.controller.update_data(self.sources)
 
     @staticmethod
-    def _get_controller_class(game: str) -> DataModel:
+    def _get_controller_class(game: str) -> CodeEntriesListController:
         try:
             CODE_ENTRIES_LIST_CONTROLLER = {
                 "gi": GenshinImpactDM,

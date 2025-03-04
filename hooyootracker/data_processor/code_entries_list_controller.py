@@ -10,7 +10,7 @@ from hooyootracker.scraper.model import CodeEntriesList, Scraper
 logger = Logger()
 
 
-class DataModel:
+class CodeEntriesListController:
     def __init__(self, game: str):
         self.db: Database = Database()
         self.entries_list: List[Tuple[Any, ...]] = self._restructure_as_dict(self.db.get_data(game))
@@ -186,7 +186,7 @@ class DataModel:
         return data
 
 
-class GenshinImpactDM(DataModel):
+class GenshinImpactDM(CodeEntriesListController):
     def get_data(self, sources: List[str]) -> List[Tuple[Any, ...]]:
         if not self.entries_list:
             scraper_classes = self._get_scraper_classes()
@@ -243,7 +243,7 @@ class GenshinImpactDM(DataModel):
         return scraper_classes
 
 
-class ZenlessZoneZeroDM(DataModel):
+class ZenlessZoneZeroDM(CodeEntriesListController):
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
         if not self.entries_list:
             scraper_classes = self._get_scraper_classes()
