@@ -14,6 +14,7 @@ class CodeEntriesListController:
     def __init__(self, game: str):
         self.db: Database = Database()
         self.entries_list: List[Tuple[Any, ...]] = self._restructure_as_dict(self.db.get_data(game))
+        self.config: Dict[str, Any] = None
 
     @abstractmethod
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
@@ -40,16 +41,18 @@ class CodeEntriesListController:
         exception, thus halting the program.
         """
 
-        logger.debug(f"Attempting to open config file at: {config_path}")
+        if self.config is None:
+            logger.debug(f"Attempting to open config file at: {config_path}")
 
-        try:
-            with open(config_path, 'r') as file:
-                config = toml.load(file)
-            logger.debug("Config file loaded successfully")
-            return config
-        except Exception as e:
-            logger.critical(f"Error parsing config file: {e}", exc_info=True)
-            raise FileParsingError from e
+            try:
+                with open(config_path, 'r') as file:
+                    self.config = toml.load(file)
+                logger.debug("Config file loaded successfully")
+            except Exception as e:
+                logger.critical(f"Error parsing config file: {e}", exc_info=True)
+                raise FileParsingError from e
+
+        return self.config
 
     def _get_data_list(
             self,
