@@ -5,7 +5,7 @@ from hooyootracker.db.model import Database
 from hooyootracker.data_processor._exceptions import FileParsingError
 from hooyootracker.logger import Logger
 from hooyootracker.scraper import gi, zzz
-from hooyootracker.scraper.model import Scraper
+from hooyootracker.scraper.model import CodeEntriesList, Scraper
 
 logger = Logger()
 
@@ -80,47 +80,46 @@ class DataModel:
                 entries_list.append(entry)
             else:
                 logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
-
         entries_list = self._remove_duplicate_entries(entries_list, code_link_template)
 
         return entries_list
 
     def _remove_duplicate_entries(
             self,
-            sources: List[Dict[str, str | List]],
+            code_entries_lists: List[CodeEntriesList],
             code_link_template: str,
     ) -> List[Dict[str, str]]:
-        if sources is None:
+        if code_entries_lists is None:
             return None
 
         clean_list = []
 
-        if len(sources) == 1:
-            for source in sources:
-                if not source['code_list']:
+        if len(code_entries_lists) == 1:
+            for source in code_entries_lists:
+                if not source.code_list:
                     return None
 
-                for entry in source['code_list']:
-                    code = entry["code"]
+                for entry in source.code_list:
+                    code = entry.code
 
                     code_info = self._get_code_info(source, entry, code_link_template, code)
 
                     clean_list.append(code_info)
 
-        elif len(sources) >= 2:
+        elif len(code_entries_lists) >= 2:
             unique_list = set()
             total_duplicate_codes = 0
 
-            logger.info(f"Removing potential duplicate code entries from {len(sources)} sources")
+            logger.info(f"Removing potential duplicate code entries from {len(code_entries_lists)} sources")
 
-            for source in sources:
-                logger.debug(f"Processing source: {source['source_name']}")
+            for source in code_entries_lists:
+                logger.debug(f"Processing source: {source.source_name}")
 
-                if not source['code_list']:
+                if not source.code_list:
                     continue
 
-                for entry in source['code_list']:
-                    code = entry["code"]
+                for entry in source.code_list:
+                    code = entry.code
 
                     if code not in unique_list:
                         unique_list.add(code)
@@ -128,10 +127,10 @@ class DataModel:
                         code_info = self._get_code_info(source, entry, code_link_template, code)
 
                         clean_list.append(code_info)
-                        logger.debug(f"Skipping {code} ({source['source_name']}) as it is unique")
+                        logger.debug(f"Skipping {code} ({source.source_name}) as it is unique")
                     else:
                         total_duplicate_codes += 1
-                        logger.debug(f"Duplicate code found: {code} ({source['source_name']})")
+                        logger.debug(f"Duplicate code found: {code} ({source.source_name})")
 
             logger.debug(f"Removed {total_duplicate_codes} duplicate codes")
 
@@ -147,10 +146,10 @@ class DataModel:
 
         code_info = {
             "code": code,
-            "reward_details": entry["reward_details"],
+            "reward_details": entry.reward_details,
             "code_link": code_link_template.format(code=code),
-            "source_name": source["source_name"],
-            "source_url": source["source_url"],
+            "source_name": source.source_name,
+            "source_url": source.source_url,
         }
 
         return code_info
