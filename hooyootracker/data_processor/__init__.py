@@ -1,3 +1,3 @@
-from .code_entries_list_manager import CodeEntriesListManager
+from .manager import CodeEntriesListManager
 
 __all__ = ["CodeEntriesListManager"]

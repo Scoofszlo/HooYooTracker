@@ -1,6 +1,6 @@
 from typing import Dict, List
 from hooyootracker.data_processor._exceptions import InvalidGameType
-from hooyootracker.data_processor.code_entries_list_controller import (
+from hooyootracker.data_processor.controller import (
     CodeEntriesListController,
     GenshinImpactDM,
     ZenlessZoneZeroDM
