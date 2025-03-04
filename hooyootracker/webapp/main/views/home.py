@@ -2,15 +2,31 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from hooyootracker.constants import CONFIG_FILE_PATH
 from hooyootracker.data_processor.code_entries_list_manager import CodeEntriesListManager
 
-
 bp = Blueprint("pages", __name__)
+dm_genshin = None
+dm_zzz = None
+
+
+def get_manager(game):
+    global dm_genshin, dm_zzz
+    if game == "gi":
+        if dm_genshin is None:
+            dm_genshin = CodeEntriesListManager(
+                game=game,
+                config_path=CONFIG_FILE_PATH
+            )
+        return dm_genshin
+    elif game == "zzz":
+        if dm_zzz is None:
+            dm_zzz = CodeEntriesListManager(
+                game=game,
+                config_path=CONFIG_FILE_PATH
+            )
+        return dm_zzz
 
 
 def handle_page_redirect(game, page_title, page_url_name, page_template_url):
-    dp = CodeEntriesListManager(
-        game=game,
-        config_path=CONFIG_FILE_PATH
-    )
+    dp = get_manager(game)
     data = dp.get_data()
 
     if request.method == 'POST':
