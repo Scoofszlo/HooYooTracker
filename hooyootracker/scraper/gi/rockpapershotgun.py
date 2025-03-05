@@ -2,14 +2,15 @@ import re
 import requests
 from typing import List, Optional
 from bs4 import BeautifulSoup, Tag
+from hooyootracker.constants import Game, Source
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
 from hooyootracker.scraper.scraper import Scraper
 from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
 class RockPaperShotgun(Scraper):
-    source_name = "RockPaperShotgun"
-    source_url = SOURCE_URLS["gi"][source_name]
+    source_name = Source.RockPaperShotgun
+    source_url = SOURCE_URLS[Game.GenshinImpact][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)
