@@ -1,11 +1,11 @@
 import toml
 from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
-from hooyootracker.db.model import Database
+from hooyootracker.db.database import Database
 from hooyootracker.data_processor._exceptions import FileParsingError
 from hooyootracker.logger import Logger
 from hooyootracker.scraper import gi, zzz
-from hooyootracker.scraper.model import CodeEntriesList, Scraper
+from hooyootracker.scraper.scraper import CodeEntriesList, Scraper
 
 logger = Logger()
 
