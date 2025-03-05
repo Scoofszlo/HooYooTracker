@@ -3,7 +3,7 @@ import requests
 from typing import List
 from bs4 import BeautifulSoup, Tag
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
-from hooyootracker.scraper.model import Scraper
+from hooyootracker.scraper.scraper import Scraper
 from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
