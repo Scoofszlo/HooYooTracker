@@ -189,7 +189,7 @@ class CodeEntriesListController:
         return data
 
 
-class GenshinImpactDM(CodeEntriesListController):
+class GenshinImpactCELC(CodeEntriesListController):
     def get_data(self, sources: List[str]) -> List[Tuple[Any, ...]]:
         if not self.entries_list:
             scraper_classes = self._get_scraper_classes()
@@ -246,7 +246,7 @@ class GenshinImpactDM(CodeEntriesListController):
         return scraper_classes
 
 
-class ZenlessZoneZeroDM(CodeEntriesListController):
+class ZenlessZoneZeroCELC(CodeEntriesListController):
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
         if not self.entries_list:
             scraper_classes = self._get_scraper_classes()
