@@ -16,18 +16,18 @@ class Source(Enum):
 
 # Default sources for Genshin Impact scrapers
 DEFAULT_GI_SOURCES = [
-    "Game8",
-    "PocketTactics",
-    "RockPaperShotgun",
-    "VG247"
+    Source.Game8.value,
+    Source.PocketTactics.value,
+    Source.RockPaperShotgun.value,
+    Source.VG247.value
 ]
 
 # Default sources for Zenless Zone Zero scrapers
 DEFAULT_ZZZ_SOURCES = [
-    "Game8",
-    "PocketTactics",
-    # "Polygon",
-    "VG247"
+    Source.Game8.value,
+    Source.PocketTactics.value,
+    # Source.Polygon.value,
+    Source.VG247.value
 ]
 
 
