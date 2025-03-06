@@ -10,17 +10,16 @@ from hooyootracker.data_processor.controller import (
 class CodeEntriesListManager():
     def __init__(self, game: str, config_path: str) -> None:
         self.controller: CodeEntriesListController = self._get_controller_class(game, config_path)
-        self.sources: List[str] = self.controller.get_sources(config_path)
         self.entries_list: List[Dict[str, str]] = []
 
     def get_data(self) -> None:
         if not self.entries_list:
-            self.entries_list = self.controller.get_data(self.sources)
+            self.entries_list = self.controller.get_data()
 
         return self.entries_list
 
     def update_data(self) -> None:
-        self.entries_list = self.controller.update_data(self.sources)
+        self.entries_list = self.controller.update_data()
 
     @staticmethod
     def _get_controller_class(game: str, config_path: str) -> CodeEntriesListController:

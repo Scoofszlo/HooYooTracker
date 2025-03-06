@@ -15,6 +15,7 @@ class CodeEntriesListController:
         self.db: Database = Database()
         self.entries_list: List[Tuple[Any, ...]] = self._restructure_as_dict(self.db.get_data(game))
         self.config: Dict[str, Any] = self._get_config(config_path)
+        self.scrapers: List[Scraper] = self.get_scrapers()
 
     @abstractmethod
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
@@ -23,16 +24,22 @@ class CodeEntriesListController:
         of codes and its reward details
         """
 
-    @abstractmethod
-    def get_sources(self, config_path: str, source_key: str) -> Dict[str, Any]:
+    def get_scrapers(self, source_key: str, scraper_classes: Dict[str, Scraper]) -> List[Scraper]:
         """
-        This method retrieves a list of source names from the config
-        file, which then returns a list of strings containing source names.
+        This gets the list of scrapers to be used based on the sources listed
+        from the config file
         """
+        sources = self.config['sources'][source_key]
 
-    @abstractmethod
-    def _get_scraper_classes(self) -> Dict[str, Scraper]:
-        pass
+        scraper_list = []
+
+        for source in sources:
+            if source in scraper_classes:
+                scraper_list.append(scraper_classes[source])
+            else:
+                logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
+
+        return scraper_list
 
     def _get_config(self, config_path: str):
         """
@@ -53,8 +60,6 @@ class CodeEntriesListController:
 
     def _get_data_list(
             self,
-            sources: List[str],
-            source_classes: Dict[str, Scraper],
             code_link_template: str,
     ) -> List[Dict[str, str | List]] | None:
         """
@@ -62,24 +67,21 @@ class CodeEntriesListController:
         procesed data into a list of dictionaries containing the code,
         reward details, and source details.
         """
-        if sources is None:
-            logger.info("No list of sources have been passed. Nothing will be processed.")
+        if not self.scrapers:
+            logger.info("No list of scrapers are available. Nothing will be processed.")
             return None
         else:
-            logger.info(f"Getting latest changes from {len(sources)} source{'s' if len(sources) > 1 else ''} ")
+            logger.info(f"Getting latest changes from {len(self.scrapers)} source{'s' if len(self.scrapers) > 1 else ''} ")
 
         entries_list = []
 
-        for source in sources:
-            if source in source_classes:
-                entry = source_classes[source]().get_data()
+        for scraper in self.scrapers:
+            entry = scraper().get_data()
 
-                if entry is None:
-                    continue
+            if entry is None:
+                continue
 
-                entries_list.append(entry)
-            else:
-                logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
+            entries_list.append(entry)
         entries_list = self._remove_duplicate_entries(entries_list, code_link_template)
 
         return entries_list
@@ -187,13 +189,9 @@ class CodeEntriesListController:
 
 
 class GenshinImpactCELC(CodeEntriesListController):
-    def get_data(self, sources: List[str]) -> List[Tuple[Any, ...]]:
+    def get_data(self) -> List[Tuple[Any, ...]]:
         if not self.entries_list:
-            scraper_classes = self._get_scraper_classes()
-
             entries_list = self._get_data_list(
-                sources,
-                scraper_classes,
                 code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}",
             )
 
@@ -206,19 +204,8 @@ class GenshinImpactCELC(CodeEntriesListController):
 
         return self.entries_list
 
-    def get_sources(self, config_path: str) -> List[str]:
-        source_key = "gi_sources"
-        sources = self.config['sources'][source_key]
-        logger.debug(f"Sources retrieved: {sources}")
-
-        return sources
-
-    def update_data(self, sources: List[str]):
-        scraper_classes = self._get_scraper_classes()
-
+    def update_data(self):
         entries_list = self._get_data_list(
-            sources,
-            scraper_classes,
             code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}",
         )
 
@@ -231,7 +218,8 @@ class GenshinImpactCELC(CodeEntriesListController):
 
         return self.entries_list
 
-    def _get_scraper_classes(self) -> Dict[str, Scraper]:
+    def get_scrapers(self) -> List[Scraper]:
+        source_key = "zzz_sources"
         scraper_classes = {
             "PocketTactics": gi.PocketTactics,
             "Game8": gi.Game8,
@@ -239,17 +227,13 @@ class GenshinImpactCELC(CodeEntriesListController):
             "VG247": gi.VG247
         }
 
-        return scraper_classes
+        return super().get_scrapers(source_key, scraper_classes)
 
 
 class ZenlessZoneZeroCELC(CodeEntriesListController):
-    def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
+    def get_data(self) -> List[Dict[str, str]]:
         if not self.entries_list:
-            scraper_classes = self._get_scraper_classes()
-
             entries_list = self._get_data_list(
-                sources,
-                scraper_classes,
                 code_link_template="https://zenless.hoyoverse.com/redemption?code={code}",
             )
 
@@ -262,19 +246,8 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
 
         return self.entries_list
 
-    def get_sources(self, config_path: str) -> List[str]:
-        source_key = "zzz_sources"
-        sources = self.config['sources'][source_key]
-        logger.debug(f"Sources retrieved: {sources}")
-
-        return sources
-
-    def update_data(self, sources: List[str]) -> List[Tuple[Any, ...]]:
-        scraper_classes = self._get_scraper_classes()
-
+    def update_data(self) -> List[Tuple[Any, ...]]:
         entries_list = self._get_data_list(
-            sources,
-            scraper_classes,
             code_link_template="https://zenless.hoyoverse.com/redemption?code={code}",
         )
 
@@ -287,7 +260,9 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
 
         return self.entries_list
 
-    def _get_scraper_classes(self) -> Dict[str, Scraper]:
+    def get_scrapers(self) -> List[Scraper]:
+        source_key = "zzz_sources"
+
         scraper_classes = {
             "PocketTactics": zzz.PocketTactics,
             "Game8": zzz.Game8,
@@ -295,4 +270,4 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
             "VG247": zzz.VG247
         }
 
-        return scraper_classes
+        return super().get_scrapers(source_key, scraper_classes)
