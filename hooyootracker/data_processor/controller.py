@@ -11,10 +11,10 @@ logger = Logger()
 
 
 class CodeEntriesListController:
-    def __init__(self, game: str):
+    def __init__(self, game: str, config_path: str):
         self.db: Database = Database()
         self.entries_list: List[Tuple[Any, ...]] = self._restructure_as_dict(self.db.get_data(game))
-        self.config: Dict[str, Any] = None
+        self.config: Dict[str, Any] = self._get_config(config_path)
 
     @abstractmethod
     def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
@@ -34,25 +34,22 @@ class CodeEntriesListController:
     def _get_scraper_classes(self) -> Dict[str, Scraper]:
         pass
 
-    def _get_config(self, config_path: str) -> Dict[str, Any]:
+    def _get_config(self, config_path: str):
         """
         This parses the config file specified from the path and loads it.
         If there is an error parsing the config file, this will result in
         exception, thus halting the program.
         """
 
-        if self.config is None:
-            logger.debug(f"Attempting to open config file at: {config_path}")
+        logger.debug(f"Attempting to open config file at: {config_path}")
 
-            try:
-                with open(config_path, 'r') as file:
-                    self.config = toml.load(file)
-                logger.debug("Config file loaded successfully")
-            except Exception as e:
-                logger.critical(f"Error parsing config file: {e}", exc_info=True)
-                raise FileParsingError from e
-
-        return self.config
+        try:
+            with open(config_path, 'r') as file:
+                return toml.load(file)
+            logger.debug("Config file loaded successfully")
+        except Exception as e:
+            logger.critical(f"Error parsing config file: {e}", exc_info=True)
+            raise FileParsingError from e
 
     def _get_data_list(
             self,
@@ -210,9 +207,8 @@ class GenshinImpactCELC(CodeEntriesListController):
         return self.entries_list
 
     def get_sources(self, config_path: str) -> List[str]:
-        config = self._get_config(config_path)
         source_key = "gi_sources"
-        sources = config['sources'][source_key]
+        sources = self.config['sources'][source_key]
         logger.debug(f"Sources retrieved: {sources}")
 
         return sources
@@ -267,9 +263,8 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
         return self.entries_list
 
     def get_sources(self, config_path: str) -> List[str]:
-        config = self._get_config(config_path)
         source_key = "zzz_sources"
-        sources = config['sources'][source_key]
+        sources = self.config['sources'][source_key]
         logger.debug(f"Sources retrieved: {sources}")
 
         return sources

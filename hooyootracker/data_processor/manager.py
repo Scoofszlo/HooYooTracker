@@ -9,7 +9,7 @@ from hooyootracker.data_processor.controller import (
 
 class CodeEntriesListManager():
     def __init__(self, game: str, config_path: str) -> None:
-        self.controller: CodeEntriesListController = self._get_controller_class(game)
+        self.controller: CodeEntriesListController = self._get_controller_class(game, config_path)
         self.sources: List[str] = self.controller.get_sources(config_path)
         self.entries_list: List[Dict[str, str]] = []
 
@@ -23,13 +23,13 @@ class CodeEntriesListManager():
         self.entries_list = self.controller.update_data(self.sources)
 
     @staticmethod
-    def _get_controller_class(game: str) -> CodeEntriesListController:
+    def _get_controller_class(game: str, config_path: str) -> CodeEntriesListController:
         try:
             CODE_ENTRIES_LIST_CONTROLLER = {
                 "gi": GenshinImpactCELC,
                 "zzz": ZenlessZoneZeroCELC
             }
 
-            return CODE_ENTRIES_LIST_CONTROLLER[game](game)
+            return CODE_ENTRIES_LIST_CONTROLLER[game](game, config_path)
         except (ValueError, KeyError):
             raise InvalidGameType(game) from None
