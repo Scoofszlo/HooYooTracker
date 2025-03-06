@@ -28,12 +28,11 @@ class Scraper:
             code_list=[]
         )
 
-    def get_data(
-            self,
-            source_name: Source,
-            source_url: str
-    ) -> Optional[CodeEntriesList]:
-        logger.info(f"Getting data from {source_name.value} ({source_url})")
+    def get_data(self) -> Optional[CodeEntriesList]:
+        source_name = self.code_entries_list.source_name
+        source_url = self.code_entries_list.source_url
+
+        logger.info(f"Getting data from {source_name} ({source_url})")
 
         # Extracts the data from source that has the container containing
         # the code and its reward details, which then returns a list of Tags

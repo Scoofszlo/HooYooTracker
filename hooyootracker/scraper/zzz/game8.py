@@ -16,7 +16,7 @@ class Game8(Scraper):
         super().__init__(self.source_name, self.source_url)
 
     def get_data(self):
-        return super().get_data(self.source_name, self.source_url)
+        return super().get_data()
 
     @handle_source_exc(source_name=source_name)
     def _get_source_data(self, source_url: str) -> List[Tag]:
