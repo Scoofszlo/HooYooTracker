@@ -9,8 +9,8 @@ from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
 class Polygon(Scraper):
-    source_name = Source.Polygon
-    source_url = SOURCE_URLS[Game.ZenlessZoneZero][source_name]
+    source_name = Source.POLYGON
+    source_url = SOURCE_URLS[Game.ZENLESS_ZONE_ZERO][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)

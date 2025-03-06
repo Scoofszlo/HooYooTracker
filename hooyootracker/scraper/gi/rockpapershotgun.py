@@ -9,8 +9,8 @@ from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
 class RockPaperShotgun(Scraper):
-    source_name = Source.RockPaperShotgun
-    source_url = SOURCE_URLS[Game.GenshinImpact][source_name]
+    source_name = Source.ROCK_PAPER_SHOTGUN
+    source_url = SOURCE_URLS[Game.GENSHIN_IMPACT][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)

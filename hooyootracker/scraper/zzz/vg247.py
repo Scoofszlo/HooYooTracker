@@ -10,7 +10,7 @@ from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 class VG247(Scraper):
     source_name = Source.VG247
-    source_url = SOURCE_URLS[Game.ZenlessZoneZero][source_name]
+    source_url = SOURCE_URLS[Game.ZENLESS_ZONE_ZERO][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)
