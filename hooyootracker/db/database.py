@@ -37,16 +37,7 @@ class Database:
 
     def get_data(self, game: str) -> List[Tuple[Any, ...]]:
         query = """
-                SELECT m.metadata_id, g.name, m.modified_date, g.name, src.name, src.url, ce.code, ce.reward_details, ce.reward_details, ce.code_link from code_entries as ce
-                    INNER JOIN metadata as m ON g.game_id = m.game_id
-                    INNER JOIN game as g ON g.name = ?
-                    INNER JOIN sources as src ON src.source_id = ce.source_id
-                    WHERE g.game_id = ce.game_id
-                    ORDER BY ce.code_entry_id;
-                """
-        
-        query2 = """
-                SELECT m.metadata_id, g.name, m.modified_date, src.name, src.url, ce.code, ce.reward_details, ce.code_link 
+                SELECT m.metadata_id, g.name, m.modified_date, src.name, src.url, ce.code, ce.reward_details, ce.code_link
                 FROM code_entries AS ce
                 INNER JOIN metadata AS m ON ce.game_id = m.game_id
                 INNER JOIN game AS g ON g.game_id = ce.game_id
@@ -55,7 +46,7 @@ class Database:
                 ORDER BY ce.code_entry_id;
                 """
 
-        self.cursor.execute(query2, (game,))
+        self.cursor.execute(query, (game,))
         data = self.cursor.fetchall()
 
         return data

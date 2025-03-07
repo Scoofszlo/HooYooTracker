@@ -13,6 +13,7 @@ class CodeEntry:
     code: str
     reward_details: str
 
+
 @dataclass
 class CodeEntriesList:
     source_name: str
