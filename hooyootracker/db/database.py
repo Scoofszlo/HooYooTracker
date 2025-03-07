@@ -8,7 +8,7 @@ logger = Logger()
 
 
 class Database:
-    def __init__(self) -> None:
+    def __init__(self):
         self.connection = sqlite3.connect(DB_FILE_PATH, check_same_thread=False)
         self.cursor = self.connection.cursor()
         self._init_tables()
@@ -51,26 +51,6 @@ class Database:
         data = self.cursor.fetchall()
 
         return data
-
-    def _insert_metadata_details(
-            self,
-            game_id: int,
-            modified_date: str
-    ) -> int:
-        logger.debug(f"No metadata details associated with 'game_id = {game_id}' found. Inserting data...")
-
-        query = """
-                INSERT INTO metadata (game_id, modified_date)
-                VALUES (?, ?);
-                """
-        self.cursor.execute(query, (game_id, modified_date,))
-        self.connection.commit()
-
-        metadata_id = self.cursor.lastrowid
-
-        logger.debug(f"Metadata details inserted successfully. (metadata_id: {metadata_id}, game: {game_id}, modified_date: {modified_date})")
-
-        return metadata_id
 
     def _init_tables(self) -> None:
         if not self._check_table_exists(table_name="game"):
@@ -158,11 +138,30 @@ class Database:
 
             logger.debug("Creating database table 'code_entries' success.")
 
+    def _insert_metadata_details(
+            self,
+            game_id: int,
+            modified_date: str
+    ) -> int:
+        logger.debug(f"No metadata details associated with 'game_id = {game_id}' found. Inserting data...")
+
+        query = """
+                INSERT INTO metadata (game_id, modified_date)
+                VALUES (?, ?);
+                """
+        self.cursor.execute(query, (game_id, modified_date,))
+        metadata_id = self.cursor.lastrowid
+        self.connection.commit()
+
+        logger.debug(f"Metadata details inserted successfully. (metadata_id: {metadata_id}, game: {game_id}, modified_date: {modified_date})")
+
+        return metadata_id
+
     def _update_metadata_details(
             self,
             game_id: int,
             modified_date: str
-    ) -> None:
+    ) -> int:
         logger.debug(f"Existing metadetails found associated with 'game_id = {game_id}'. Updating data...")
 
         query = """
@@ -175,14 +174,19 @@ class Database:
                 """
         self.cursor.execute(query, (game_id,))
         metadata_id = self.cursor.fetchone()[0]
-
         self.connection.commit()
 
         logger.debug(f"Metadata details updated successfully. (metadata_id: {metadata_id}, game: {game_id}, modified_date: {modified_date})")
 
         return metadata_id
 
-    def _insert_entry(self, entry: Dict[str, str], metadata_id: int, game_id: int, source_url_id: int) -> None:
+    def _insert_entry(
+            self,
+            entry: Dict[str, str],
+            metadata_id: int,
+            game_id: int,
+            source_url_id: int
+    ) -> None:
         logger.debug(f"Inserting entry: {entry}")
 
         code = entry['code']
@@ -203,8 +207,8 @@ class Database:
                 DELETE from code_entries WHERE game_id = ?;
                 """
         self.cursor.execute(query, (game_id,))
-
         self.connection.commit()
+
         logger.debug("Deleting code entries successfully")
 
     def _check_table_exists(self, table_name: str) -> None:
@@ -225,16 +229,15 @@ class Database:
 
         return self.cursor.fetchone() is not None
 
-    def _check_code_entries_exists(self, game_id: int):
+    def _check_code_entries_exists(self, game_id: int) -> bool:
         query = """
                 SELECT 1 FROM code_entries WHERE game_id = ?;
                 """
-
         self.cursor.execute(query, (game_id,))
 
         return self.cursor.fetchone() is not None
 
-    def _check_source_name_exists(self, source_name: str):
+    def _check_source_name_exists(self, source_name: str) -> bool:
         query = """
                 SELECT 1 FROM source_name WHERE name = ?;
                 """
@@ -243,7 +246,7 @@ class Database:
 
         return self.cursor.fetchone() is not None
 
-    def _check_source_url_exists(self, source_url: str):
+    def _check_source_url_exists(self, source_url: str) -> bool:
         query = """
                 SELECT 1 FROM source_url WHERE url = ?;
                 """
@@ -264,6 +267,9 @@ class Database:
         return metadata_id
 
     def _handle_source_data(self, entry: Dict[str, str]) -> int:
+        """
+        This handles insertion of source name and source URLs into respective tables
+        """
         source_name = entry['source_name']
         source_name_id: int
         source_url = entry['source_url']
