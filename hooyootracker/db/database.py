@@ -32,16 +32,17 @@ class Database:
             self._delete_records(game_id)
 
         for entry in code_list:
-            source_id = self._handle_source_data(entry)
-            self._insert_entry(entry, metadata_id, game_id, source_id)
+            source_url_id = self._handle_source_data(entry)
+            self._insert_entry(entry, metadata_id, game_id, source_url_id)
 
     def get_data(self, game: str) -> List[Tuple[Any, ...]]:
         query = """
-                SELECT m.metadata_id, g.name, m.modified_date, src.name, src.url, ce.code, ce.reward_details, ce.code_link
+                SELECT m.metadata_id, g.name, m.modified_date, src_name.name, src_url.url, ce.code, ce.reward_details, ce.code_link
                 FROM code_entries AS ce
                 INNER JOIN metadata AS m ON ce.game_id = m.game_id
                 INNER JOIN game AS g ON g.game_id = ce.game_id
-                INNER JOIN sources AS src ON src.source_id = ce.source_id
+                INNER JOIN source_name AS src_name ON src_name.source_name_id = src_url.source_name_id
+                INNER JOIN source_url AS src_url ON src_url.source_url_id = ce.source_url_id
                 WHERE g.name = ?
                 ORDER BY ce.code_entry_id;
                 """
@@ -97,18 +98,31 @@ class Database:
                 self.cursor.execute(insert_data_query, (datum[0], datum[1]))
                 self.connection.commit()
 
-        if not self._check_table_exists(table_name="sources"):
+        if not self._check_table_exists(table_name="source_name"):
             query = """
-                    CREATE TABLE sources (
-                        source_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                        name TEXT,
-                        url TEXT
+                    CREATE TABLE source_name (
+                        source_name_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL
                     );
                     """
             self.cursor.execute(query)
             self.connection.commit()
 
-            logger.debug("Creating database table 'sources' success.")
+            logger.debug("Creating database table 'source_name' success.")
+
+        if not self._check_table_exists(table_name="source_url"):
+            query = """
+                    CREATE TABLE source_url (
+                        source_url_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        source_name_id INTEGER NOT NULL,
+                        url TEXT NOT NULL,
+                        FOREIGN KEY (source_name_id) REFERENCES source_name(source_name_id)
+                    );
+                    """
+            self.cursor.execute(query)
+            self.connection.commit()
+
+            logger.debug("Creating database table 'source_url' success.")
 
         if not self._check_table_exists(table_name="metadata"):
             query = """
@@ -130,13 +144,13 @@ class Database:
                         code_entry_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         metadata_id INTEGER NOT NULL,
                         game_id INTEGER NOT NULL,
-                        source_id INTEGER,
+                        source_url_id INTEGER,
                         code TEXT NOT NULL,
                         reward_details TEXT NOT NULL,
                         code_link TEXT NOT NULL,
                         FOREIGN KEY (metadata_id) REFERENCES metadata(metadata_id),
                         FOREIGN KEY (game_id) REFERENCES metadata(game_id),
-                        FOREIGN KEY (source_id) REFERENCES sources(source_id)
+                        FOREIGN KEY (source_url_id) REFERENCES source_url(source_url_id)
                     );
                     """
             self.cursor.execute(query)
@@ -163,7 +177,7 @@ class Database:
 
         return metadata_id
 
-    def _insert_entry(self, entry: Dict[str, str], metadata_id: int, game_id: int, source_id: int) -> None:
+    def _insert_entry(self, entry: Dict[str, str], metadata_id: int, game_id: int, source_url_id: int) -> None:
         logger.debug(f"Inserting entry: {entry}")
 
         code = entry['code']
@@ -171,10 +185,10 @@ class Database:
         code_link = entry['code_link']
 
         query = """
-                INSERT INTO code_entries (metadata_id, game_id, source_id, code, reward_details, code_link)
+                INSERT INTO code_entries (metadata_id, game_id, source_url_id, code, reward_details, code_link)
                 VALUES (?, ?, ?, ?, ?, ?);
                 """
-        self.cursor.execute(query, (metadata_id, game_id, source_id, code, reward_details, code_link,))
+        self.cursor.execute(query, (metadata_id, game_id, source_url_id, code, reward_details, code_link,))
         self.connection.commit()
 
     def _delete_records(self, game_id: int) -> None:
@@ -215,25 +229,26 @@ class Database:
 
         return self.cursor.fetchone() is not None
 
-    def _check_source_exists(self, source_name):
+    def _check_source_name_exists(self, source_name: str):
         query = """
-                SELECT 1 FROM sources WHERE name = ?;
+                SELECT 1 FROM source_name WHERE name = ?;
                 """
 
         self.cursor.execute(query, (source_name,))
 
         return self.cursor.fetchone() is not None
 
+    def _check_source_url_exists(self, source_url: str):
+        query = """
+                SELECT 1 FROM source_url WHERE url = ?;
+                """
+
+        self.cursor.execute(query, (source_url,))
+
+        return self.cursor.fetchone() is not None
+
     def _get_date_now(self) -> str:
         return datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S%z")
-
-    def _set_metadata_id(self, game: str) -> int:
-        if game == Game.GENSHIN_IMPACT.value:
-            metadata_id = 1
-        elif game == Game.ZENLESS_ZONE_ZERO.value:
-            metadata_id = 2
-
-        return metadata_id
 
     def _get_game_id(self, game: str) -> int:
         if game == Game.GENSHIN_IMPACT.value:
@@ -245,27 +260,47 @@ class Database:
 
     def _handle_source_data(self, entry: Dict[str, str]) -> int:
         source_name = entry['source_name']
+        source_name_id: int
         source_url = entry['source_url']
+        source_url_id: int
 
         logger.debug(f"Handling source data for source_name: {source_name}, source_url: {source_url}")
 
-        if not self._check_source_exists(source_name):
-            logger.debug(f"Source '{source_name}' not found. Inserting new source.")
+        if not self._check_source_name_exists(source_name):
+            logger.debug(f"Source name '{source_name}' not found. Inserting new source.")
             query = """
-                    INSERT INTO sources (name, url)
-                    VALUES (?, ?);
+                    INSERT INTO source_name (name)
+                    VALUES (?);
                     """
-            self.cursor.execute(query, (source_name, source_url,))
+            self.cursor.execute(query, (source_name,))
             self.connection.commit()
 
-            source_id = self.cursor.lastrowid
-            logger.debug(f"Source inserted successfully. (source_id: {source_id}, name: {source_name}, url: {source_url})")
-            return source_id
+            source_name_id = self.cursor.lastrowid
+            logger.debug(f"Source inserted successfully. (source_id: {source_name_id}, name: {source_name})")
+        else:
+            query = """
+                    SELECT source_name_id FROM source_name WHERE name = ?;
+                    """
+            self.cursor.execute(query, (source_name,))
+            source_name_id = self.cursor.fetchone()[0]
+            logger.debug(f"Source name '{source_name}' found. (source_id: {source_name_id})")
 
-        query = """
-                SELECT source_id FROM sources WHERE name = ?;
-                """
-        self.cursor.execute(query, (source_name,))
-        source_id = self.cursor.fetchone()[0]
-        logger.debug(f"Source found. (source_id: {source_id}, name: {source_name})")
-        return source_id
+        if not self._check_source_url_exists(source_url):
+            logger.debug(f"Source URL '{source_url}' not found. Inserting new source URL.")
+            query = """
+                    INSERT INTO source_url (source_name_id, url)
+                    VALUES (?, ?)
+                    """
+            self.cursor.execute(query, (source_name_id, source_url))
+            self.connection.commit()
+            source_url_id = self.cursor.lastrowid
+            logger.debug(f"Source URL inserted successfully. (source_url_id: {source_url_id}, url: {source_url})")
+        else:
+            query = """
+                    SELECT source_url_id FROM source_url WHERE url = ?;
+                    """
+            self.cursor.execute(query, (source_url,))
+            source_url_id = self.cursor.fetchone()[0]
+            logger.debug(f"Source URL '{source_url}' found. (source_url_id: {source_url_id})")
+
+        return source_url_id
