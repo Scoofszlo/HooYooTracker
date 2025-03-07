@@ -1,4 +1,5 @@
 from typing import Dict, List
+from hooyootracker.constants import Game
 from hooyootracker.data_processor._exceptions import InvalidGameType
 from hooyootracker.data_processor.controller import (
     CodeEntriesListController,
@@ -25,8 +26,8 @@ class CodeEntriesListManager():
     def _get_controller_class(game: str, config_path: str) -> CodeEntriesListController:
         try:
             CODE_ENTRIES_LIST_CONTROLLER = {
-                "gi": GenshinImpactCELC,
-                "zzz": ZenlessZoneZeroCELC
+                Game.GENSHIN_IMPACT.value: GenshinImpactCELC,
+                Game.ZENLESS_ZONE_ZERO.value: ZenlessZoneZeroCELC
             }
 
             return CODE_ENTRIES_LIST_CONTROLLER[game](game, config_path)

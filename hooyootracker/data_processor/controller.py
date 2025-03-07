@@ -1,7 +1,7 @@
 import toml
 from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
-from hooyootracker.constants import Game
+from hooyootracker.constants import Game, Source
 from hooyootracker.db.database import Database
 from hooyootracker.data_processor._exceptions import FileParsingError
 from hooyootracker.logger import Logger
@@ -222,10 +222,10 @@ class GenshinImpactCELC(CodeEntriesListController):
     def get_scrapers(self) -> List[Scraper]:
         source_key = "zzz_sources"
         scraper_classes = {
-            "PocketTactics": gi.PocketTactics,
-            "Game8": gi.Game8,
-            "RockPaperShotgun": gi.RockPaperShotgun,
-            "VG247": gi.VG247
+            Source.POCKET_TACTICS.value: gi.PocketTactics,
+            Source.GAME8.value: gi.Game8,
+            Source.ROCK_PAPER_SHOTGUN.value: gi.RockPaperShotgun,
+            Source.VG247.value: gi.VG247
         }
 
         return super().get_scrapers(source_key, scraper_classes)
@@ -265,10 +265,10 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
         source_key = "zzz_sources"
 
         scraper_classes = {
-            "PocketTactics": zzz.PocketTactics,
-            "Game8": zzz.Game8,
-            "Polygon": zzz.Polygon,
-            "VG247": zzz.VG247
+            Source.POCKET_TACTICS.value: zzz.PocketTactics,
+            Source.GAME8.value: zzz.Game8,
+            Source.POLYGON.value: zzz.Polygon,
+            Source.VG247.value: zzz.VG247
         }
 
         return super().get_scrapers(source_key, scraper_classes)
