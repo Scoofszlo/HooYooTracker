@@ -65,7 +65,7 @@ class Database:
             game_id: int,
             modified_date: str
     ) -> int:
-        logger.info(f"No metadata details associated with 'game_id = {game_id}' found. Inserting data...")
+        logger.debug(f"No metadata details associated with 'game_id = {game_id}' found. Inserting data...")
 
         query = """
                 INSERT INTO metadata (game_id, modified_date)
