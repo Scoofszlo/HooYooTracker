@@ -1,3 +1,3 @@
-from .presenter import DataPresenter
+from .manager import CodeEntriesListManager
 
-__all__ = ["DataPresenter"]
+__all__ = ["CodeEntriesListManager"]

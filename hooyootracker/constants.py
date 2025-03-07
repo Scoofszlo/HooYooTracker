@@ -1,17 +1,33 @@
+from enum import Enum
+
+
+class Game(Enum):
+    GENSHIN_IMPACT = "Genshin Impact"
+    ZENLESS_ZONE_ZERO = "Zenless Zone Zero"
+
+
+class Source(Enum):
+    GAME8 = "Game8"
+    POCKET_TACTICS = "Pocket Tactics"
+    ROCK_PAPER_SHOTGUN = "Rock Paper Shotgun"
+    VG247 = "VG247"
+    POLYGON = "Polygon"
+
+
 # Default sources for Genshin Impact scrapers
 DEFAULT_GI_SOURCES = [
-    "Game8",
-    "PocketTactics",
-    "RockPaperShotgun",
-    "VG247"
+    Source.GAME8.value,
+    Source.POCKET_TACTICS.value,
+    Source.ROCK_PAPER_SHOTGUN.value,
+    Source.VG247.value
 ]
 
 # Default sources for Zenless Zone Zero scrapers
 DEFAULT_ZZZ_SOURCES = [
-    "Game8",
-    "PocketTactics",
-    # "Polygon",
-    "VG247"
+    Source.GAME8.value,
+    Source.POCKET_TACTICS.value,
+    # Source.POLYGON.value,
+    Source.VG247.value
 ]
 
 

@@ -2,20 +2,21 @@ import re
 import requests
 from typing import List
 from bs4 import BeautifulSoup, Tag
+from hooyootracker.constants import Game, Source
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
-from hooyootracker.scraper.model import Scraper
+from hooyootracker.scraper.scraper import Scraper
 from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
 class PocketTactics(Scraper):
-    source_name = "PocketTactics"
-    source_url = SOURCE_URLS["zzz"][source_name]
+    source_name = Source.POCKET_TACTICS
+    source_url = SOURCE_URLS[Game.ZENLESS_ZONE_ZERO][source_name]
 
     def __init__(self):
         super().__init__(self.source_name, self.source_url)
 
     def get_data(self):
-        return super().get_data(self.source_name, self.source_url)
+        return super().get_data()
 
     @handle_source_exc(source_name=source_name)
     def _get_source_data(self, source_url: str) -> List[Tag]:
