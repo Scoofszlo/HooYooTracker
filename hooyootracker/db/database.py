@@ -169,9 +169,14 @@ class Database:
                 UPDATE metadata SET modified_date = ? WHERE game_id = ?;
                 """
         self.cursor.execute(query, (modified_date, game_id,))
-        self.connection.commit()
 
-        metadata_id = self.cursor.lastrowid
+        query = """
+                SELECT metadata_id FROM metadata WHERE game_id = ?;
+                """
+        self.cursor.execute(query, (game_id,))
+        metadata_id = self.cursor.fetchone()[0]
+
+        self.connection.commit()
 
         logger.debug(f"Metadata details updated successfully. (metadata_id: {metadata_id}, game: {game_id}, modified_date: {modified_date})")
 
