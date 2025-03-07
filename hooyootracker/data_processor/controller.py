@@ -1,6 +1,7 @@
 import toml
 from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
+from hooyootracker.constants import Game
 from hooyootracker.db.database import Database
 from hooyootracker.data_processor._exceptions import FileParsingError
 from hooyootracker.logger import Logger
@@ -158,29 +159,29 @@ class CodeEntriesListController:
 
     def _restructure_as_dict(
             self,
-            entries_list: List[Tuple[Any, ...]]
+            entries_list: List[Any]
     ) -> List[Dict[str, str]]:
         # Return a list containing no values if there is nothing to process
-        if not entries_list[0] and not entries_list[1]:
+        if not entries_list:
             return []
 
         data = {
             "metadata": {
-                "metadata_id": entries_list[0][0][0],
-                "game": entries_list[0][0][1],
-                "modified_date": entries_list[0][0][2]
+                "metadata_id": entries_list[0][0],
+                "game": entries_list[0][1],
+                "modified_date": entries_list[0][2]
             },
             "entries_list": []
         }
 
-        for entry in entries_list[1]:
+        for entry in entries_list:
             code_info = {
-                "game": entry[2],
-                "source_name": entry[6],
-                "source_url": entry[7],
-                "code": entry[3],
-                "reward_details": entry[4],
-                "code_link": entry[5]
+                "game": entry[1],
+                "source_name": entry[3],
+                "source_url": entry[4],
+                "code": entry[5],
+                "reward_details": entry[6],
+                "code_link": entry[7]
             }
 
             data["entries_list"].append(code_info)
@@ -195,8 +196,8 @@ class GenshinImpactCELC(CodeEntriesListController):
                 code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}",
             )
 
-            self.db.insert_data(entries_list, "gi")
-            self.entries_list = self.db.get_data("gi")
+            self.db.insert_data(entries_list, Game.GENSHIN_IMPACT.value)
+            self.entries_list = self.db.get_data(Game.GENSHIN_IMPACT.value)
             self.entries_list = self._restructure_as_dict(self.entries_list)
 
             if self.entries_list:
@@ -209,8 +210,8 @@ class GenshinImpactCELC(CodeEntriesListController):
             code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}",
         )
 
-        self.db.insert_data(entries_list, "gi")
-        self.entries_list = self.db.get_data("gi")
+        self.db.insert_data(entries_list, Game.GENSHIN_IMPACT.value)
+        self.entries_list = self.db.get_data(Game.GENSHIN_IMPACT.value)
         self.entries_list = self._restructure_as_dict(self.entries_list)
 
         if self.entries_list:
@@ -237,8 +238,8 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
                 code_link_template="https://zenless.hoyoverse.com/redemption?code={code}",
             )
 
-            self.db.insert_data(entries_list, "zzz")
-            self.entries_list = self.db.get_data("zzz")
+            self.db.insert_data(entries_list, Game.ZENLESS_ZONE_ZERO.value)
+            self.entries_list = self.db.get_data(Game.ZENLESS_ZONE_ZERO.value)
             self.entries_list = self._restructure_as_dict(self.entries_list)
 
             if self.entries_list:
@@ -251,8 +252,8 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
             code_link_template="https://zenless.hoyoverse.com/redemption?code={code}",
         )
 
-        self.db.insert_data(entries_list, "zzz")
-        self.entries_list = self.db.get_data("zzz")
+        self.db.insert_data(entries_list, Game.ZENLESS_ZONE_ZERO.value)
+        self.entries_list = self.db.get_data(Game.ZENLESS_ZONE_ZERO.value)
         self.entries_list = self._restructure_as_dict(self.entries_list)
 
         if self.entries_list:
