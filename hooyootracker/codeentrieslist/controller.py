@@ -3,7 +3,7 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
 from hooyootracker.constants import Game, Source
 from hooyootracker.db.database import Database
-from hooyootracker.data_processor._exceptions import FileParsingError
+from hooyootracker.codeentrieslist._exceptions import FileParsingError
 from hooyootracker.logger import Logger
 from hooyootracker.scraper import gi, zzz
 from hooyootracker.scraper.scraper import CodeEntriesList, Scraper

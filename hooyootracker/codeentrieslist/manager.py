@@ -1,7 +1,7 @@
 from typing import Dict, List
 from hooyootracker.constants import Game
-from hooyootracker.data_processor._exceptions import InvalidGameType
-from hooyootracker.data_processor.controller import (
+from hooyootracker.codeentrieslist._exceptions import InvalidGameType
+from hooyootracker.codeentrieslist.controller import (
     CodeEntriesListController,
     GenshinImpactCELC,
     ZenlessZoneZeroCELC

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from hooyootracker.constants import CONFIG_FILE_PATH, Game
-from hooyootracker.data_processor.manager import CodeEntriesListManager
+from hooyootracker.codeentrieslist.manager import CodeEntriesListManager
 
 bp = Blueprint("pages", __name__)
 dm_genshin = None
