@@ -2,6 +2,7 @@ from abc import abstractmethod
 from typing import List, Optional
 from dataclasses import dataclass
 from bs4 import Tag
+from hooyootracker.constants import Source
 from hooyootracker.logger import Logger
 
 logger = Logger()
@@ -12,6 +13,7 @@ class CodeEntry:
     code: str
     reward_details: str
 
+
 @dataclass
 class CodeEntriesList:
     source_name: str
@@ -20,18 +22,17 @@ class CodeEntriesList:
 
 
 class Scraper:
-    def __init__(self, source_name: str, source_url: str):
+    def __init__(self, source_name: Source, source_url: str):
         self.code_entries_list: CodeEntriesList = CodeEntriesList(
-            source_name=source_name,
+            source_name=source_name.value,
             source_url=source_url,
             code_list=[]
         )
 
-    def get_data(
-            self,
-            source_name: str,
-            source_url: str
-    ) -> Optional[CodeEntriesList]:
+    def get_data(self) -> Optional[CodeEntriesList]:
+        source_name = self.code_entries_list.source_name
+        source_url = self.code_entries_list.source_url
+
         logger.info(f"Getting data from {source_name} ({source_url})")
 
         # Extracts the data from source that has the container containing
