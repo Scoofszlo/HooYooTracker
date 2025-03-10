@@ -46,16 +46,16 @@ def _identify_console_handler_level(logger_settings: Dict[str, Any]) -> int:
     logger_level = logger_settings["debug_level"]
     console_handler_level = logger_level.upper()
 
-    if console_handler_level == "INFO":
-        return logging.INFO
-    elif console_handler_level == "DEBUG":
-        return logging.DEBUG
-    elif console_handler_level == "WARNING":
-        return logging.WARNING
-    elif console_handler_level == "ERROR":
-        return logging.ERROR
-    elif console_handler_level == "CRITICAL":
-        return logging.CRITICAL
+    log_levels = {
+        "INFO": logging.INFO,
+        "DEBUG": logging.DEBUG,
+        "WARNING": logging.WARNING,
+        "ERROR": logging.ERROR,
+        "CRITICAL": logging.CRITICAL
+    }
+
+    if console_handler_level in log_levels:
+        return log_levels[console_handler_level]
     else:
         logging.getLogger(__name__).warning(f"Invalid logging level '{console_handler_level}' provided. Defaulting to INFO.")
         return logging.INFO
