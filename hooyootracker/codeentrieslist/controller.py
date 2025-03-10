@@ -1,6 +1,6 @@
 import toml
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 from hooyootracker.logging.logger import logger
 from hooyootracker.constants import Game, Source
 from hooyootracker.db.database import Database
