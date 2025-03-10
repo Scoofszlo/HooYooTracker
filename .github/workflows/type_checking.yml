@@ -8,7 +8,7 @@ on:
 jobs:
     mypy:
         runs-on: ubuntu-latest
-        name: Run flake8 linting
+        name: Run mypy type checking
         steps:
             - name: Check out source repository
               uses: actions/checkout@v3
