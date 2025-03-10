@@ -1,7 +1,7 @@
 import re
 import requests
-from typing import List
-from bs4 import BeautifulSoup, Tag
+from typing import Any, Optional, Union
+from bs4 import BeautifulSoup, ResultSet, Tag
 from hooyootracker.constants import Game, Source
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
 from hooyootracker.scraper.scraper import Scraper
@@ -19,21 +19,26 @@ class PocketTactics(Scraper):
         return super().get_data()
 
     @handle_source_exc(source_name=source_name)
-    def _get_source_data(self, source_url: str) -> List[Tag]:
-        webpage = requests.get(source_url)
-        webpage = BeautifulSoup(webpage.text, 'html.parser')
+    def _get_source_data(self, source_url: str) -> Union[ResultSet[Any], None]:
+        response = requests.get(source_url)
+        webpage = BeautifulSoup(response.text, 'html.parser')
 
         list_container = webpage.find('div', class_='entry-content')
-        code_list = list_container.find('ul')
-        source_data = code_list.find_all('li')
+        if isinstance(list_container, Tag):
+            code_list = list_container.find('ul')
 
-        return source_data
+            if isinstance(code_list, Tag):
+                source_data = code_list.find_all('li')
+                return source_data
+
+        return None
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="code")
-    def _get_code(self, entry: Tag) -> str:
-        code = entry.find('strong').text
-
-        return code
+    def _get_code(self, entry: Tag) -> Optional[str]:
+        code = entry.find('strong')
+        if isinstance(code, Tag):
+            return code.text
+        return None
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_desc")
     def _get_reward_details(self, entry: Tag) -> str:

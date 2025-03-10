@@ -1,6 +1,6 @@
 import re
 import requests
-from typing import List, Optional
+from typing import Any, Optional, Union
 from bs4 import BeautifulSoup, Tag
 from hooyootracker.constants import Game, Source
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
@@ -19,21 +19,26 @@ class VG247(Scraper):
         return super().get_data()
 
     @handle_source_exc(source_name=source_name)
-    def _get_source_data(self, source_url: str) -> Optional[List[Tag]]:
-        webpage = requests.get(source_url)
-        webpage = BeautifulSoup(webpage.text, 'html.parser')
+    def _get_source_data(self, source_url: str) -> Union[Any, None]:
+        response = requests.get(source_url)
+        webpage = BeautifulSoup(response.text, 'html.parser')
 
         list_container = webpage.find('div', class_='article_body_content')
-        code_list = list_container.find_all('ul')[1]
-        source_data = code_list.find_all('li')
+        if isinstance(list_container, Tag):
+            code_list = list_container.find_all('ul')[1]
+            source_data = code_list.find_all('li')
 
-        return source_data
+            return source_data
+
+        return None
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="code")
-    def _get_code(self, entry: Tag) -> str:
-        code = entry.find('strong').text
+    def _get_code(self, entry: Tag) -> Optional[str]:
+        code = entry.find('strong')
+        if isinstance(code, Tag):
+            return code.text
 
-        return code
+        return None
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_details")
     def _get_reward_details(self, entry: Tag) -> str:

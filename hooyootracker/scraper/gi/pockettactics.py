@@ -1,6 +1,6 @@
 import re
 import requests
-from typing import List, Optional
+from typing import List, Optional, Union
 from bs4 import BeautifulSoup, Tag
 from hooyootracker.constants import Game, Source
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
@@ -19,28 +19,30 @@ class PocketTactics(Scraper):
         return super().get_data()
 
     @handle_source_exc(source_name=source_name)
-    def _get_source_data(self, source_url: str) -> Optional[List[Tag]]:
-        webpage = requests.get(source_url)
-        webpage = BeautifulSoup(webpage.text, 'html.parser')
+    def _get_source_data(self, source_url: str) -> Union[list, None]:
+        response = requests.get(source_url)
+        webpage = BeautifulSoup(response.text, 'html.parser')
 
         list_container = webpage.find('div', class_='entry-content')
-        code_list = self._process_multiple_lists(list_container)
+        if isinstance(list_container, Tag):
+            code_list = self._process_multiple_lists(list_container)
 
-        source_data = []
-        for sublist in code_list:
-            for item in sublist.find_all('li'):
-                source_data.append(item)
+            source_data = []
+            for sublist in code_list:
+                for item in sublist.find_all('li'):
+                    source_data.append(item)
 
-        return source_data
+            return source_data
+
+        return None
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="code")
-    def _get_code(self, entry: Tag) -> str:
-        try:
-            code = entry.find('strong').text
-        except AttributeError:
-            code = entry.find('b').text
+    def _get_code(self, entry: Tag) -> Optional[str]:
+        code = entry.find('strong', 'b')
+        if isinstance(code, Tag):
+            return code.text
 
-        return code
+        return None
 
     @handle_data_extraction_exc(source_name=source_name, data_extraction_type="reward_details")
     def _get_reward_details(self, entry: Tag) -> str:

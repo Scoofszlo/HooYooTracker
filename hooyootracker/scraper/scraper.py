@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import List, Optional
+from typing import Any, List, Optional
 from dataclasses import dataclass
 from bs4 import Tag
 from hooyootracker.constants import Source
@@ -38,7 +38,7 @@ class Scraper:
         source_data = self._get_source_data(source_url)
 
         if not source_data:
-            return
+            return None
         else:
             logger.debug(f"Scraped source data: {source_data}")
 
@@ -58,7 +58,7 @@ class Scraper:
         return self.code_entries_list
 
     @abstractmethod
-    def _get_source_data(self, source_url: str) -> Optional[List[Tag]]:
+    def _get_source_data(self, source_url: str) -> Any:
         """Scrapes source data from specified URL source and returns a list of Tags
         containing codes and reward details"""
         pass
@@ -72,7 +72,7 @@ class Scraper:
         reward_details = self._get_reward_details(item)
 
         if not code or not reward_details:
-            return
+            return None
 
         entry_details = CodeEntry(code, reward_details)
 
