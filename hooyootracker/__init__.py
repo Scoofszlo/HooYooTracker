@@ -1,7 +1,7 @@
 import os
 import toml
 
-from hooyootracker.logger import init_logger
+from hooyootracker.logging.logger import init_logger
 from .constants import (
     PROGRAM_DATA_DIR,
     CONFIG_FILE_PATH,

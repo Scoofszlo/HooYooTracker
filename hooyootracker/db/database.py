@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 from typing import Dict, List, Tuple, Any
-from hooyootracker.logger import logger
+from hooyootracker.logging.logger import logger
 from hooyootracker.constants import DB_FILE_PATH, Game
 
 

@@ -1,7 +1,7 @@
 import toml
 from abc import abstractmethod
 from typing import Any, Dict, List, Tuple
-from hooyootracker.logger import logger
+from hooyootracker.logging.logger import logger
 from hooyootracker.constants import Game, Source
 from hooyootracker.db.database import Database
 from hooyootracker.codeentrieslist._exceptions import FileParsingError
