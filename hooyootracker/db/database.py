@@ -1,10 +1,8 @@
 import sqlite3
 from datetime import datetime
 from typing import Dict, List, Tuple, Any
+from hooyootracker.logger import logger
 from hooyootracker.constants import DB_FILE_PATH, Game
-from hooyootracker.logger import Logger
-
-logger = Logger()
 
 
 class Database:
@@ -211,7 +209,7 @@ class Database:
 
         logger.debug("Deleting code entries successfully")
 
-    def _check_table_exists(self, table_name: str) -> None:
+    def _check_table_exists(self, table_name: str):
         query = """
                 SELECT name FROM sqlite_master WHERE type='table' AND name=?;
                 """

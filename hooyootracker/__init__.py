@@ -1,5 +1,7 @@
 import os
 import toml
+
+from hooyootracker.logger import init_logger
 from .constants import (
     PROGRAM_DATA_DIR,
     CONFIG_FILE_PATH,
@@ -31,11 +33,16 @@ def _init_db() -> None:
             pass
 
 
+def _init_logger():
+    init_logger()
+
+
 def run():
     _init_program_data_dir()
     _init_file_config()
     _init_log_dir()
     _init_db()
+    _init_logger()
 
 
 run()

@@ -3,9 +3,7 @@ from typing import List, Optional
 from dataclasses import dataclass
 from bs4 import Tag
 from hooyootracker.constants import Source
-from hooyootracker.logger import Logger
-
-logger = Logger()
+from hooyootracker.logger import logger
 
 
 @dataclass
