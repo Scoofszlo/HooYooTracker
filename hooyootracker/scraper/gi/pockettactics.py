@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 from bs4 import BeautifulSoup, Tag
 from hooyootracker.constants import Game, Source
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
-from hooyootracker.scraper.scraper import Scraper
+from hooyootracker.scraper.scraper import CodeEntriesList, Scraper
 from hooyootracker.scraper.source_urls import SOURCE_URLS
 
 
@@ -13,7 +13,11 @@ class PocketTactics(Scraper):
     source_url = SOURCE_URLS[Game.GENSHIN_IMPACT][source_name]
 
     def __init__(self):
-        super().__init__(self.source_name, self.source_url)
+        self.code_entries_list: CodeEntriesList = CodeEntriesList(
+            source_name=self.source_name.value,
+            source_url=self.source_url,
+            code_list=[]
+        )
 
     def get_data(self):
         return super().get_data()

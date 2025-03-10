@@ -2,7 +2,6 @@ from abc import abstractmethod
 from typing import Any, List, Optional
 from dataclasses import dataclass
 from bs4 import Tag
-from hooyootracker.constants import Source
 from hooyootracker.logging.logger import logger
 
 
@@ -20,12 +19,8 @@ class CodeEntriesList:
 
 
 class Scraper:
-    def __init__(self, source_name: Source, source_url: str):
-        self.code_entries_list: CodeEntriesList = CodeEntriesList(
-            source_name=source_name.value,
-            source_url=source_url,
-            code_list=[]
-        )
+    def __init__(self):
+        self.code_entries_list: CodeEntriesList
 
     def get_data(self) -> Optional[CodeEntriesList]:
         source_name = self.code_entries_list.source_name

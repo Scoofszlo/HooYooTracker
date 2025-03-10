@@ -1,36 +1,49 @@
 import toml
 from abc import abstractmethod
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 from hooyootracker.logging.logger import logger
 from hooyootracker.constants import Game, Source
 from hooyootracker.db.database import Database
 from hooyootracker.codeentrieslist._exceptions import FileParsingError
 from hooyootracker.scraper import gi, zzz
-from hooyootracker.scraper.scraper import CodeEntriesList, Scraper
+from hooyootracker.scraper.scraper import CodeEntriesList, CodeEntry, Scraper
 
 
 class CodeEntriesListController:
     def __init__(self, game: str, config_path: str):
         self.db: Database = Database()
-        self.entries_list: List[Tuple[Any, ...]] = self._restructure_as_dict(self.db.get_data(game))
         self.config: Dict[str, Any] = self._get_config(config_path)
-        self.scrapers: List[Scraper] = self.get_scrapers()
+        self.source_key: str
+        self.scraper_classes: Dict[str, type[Scraper]]
+        self.scrapers: List[type[Scraper]] = self.get_scrapers(
+            source_key=self.source_key,
+            scraper_classes=self.scraper_classes
+        )
+        self.entries_list: Dict[str, Union[dict, list]] = self._restructure_as_dict(self.db.get_data(game))
 
     @abstractmethod
-    def get_data(self, sources: List[str]) -> List[Dict[str, str]]:
+    def get_data(self) -> Dict[str, Union[dict, list]]:
         """
         Process data based from specified sources and returns it with a list
         of codes and its reward details
         """
 
-    def get_scrapers(self, source_key: str, scraper_classes: Dict[str, Scraper]) -> List[Scraper]:
+    @abstractmethod
+    def update_data(self):
+        """
+        Updates the data by deleting all the records from the database,
+        retrieving the latest data from specified sources, and returning it
+        with a list of codes and its reward details
+        """
+
+    def get_scrapers(self, source_key: str, scraper_classes: Dict[str, type[Scraper]]) -> List[type[Scraper]]:
         """
         This gets the list of scrapers to be used based on the sources listed
         from the config file
         """
         sources = self.config['sources'][source_key]
 
-        scraper_list = []
+        scraper_list: List[type[Scraper]] = []
 
         for source in sources:
             if source in scraper_classes:
@@ -57,10 +70,7 @@ class CodeEntriesListController:
             logger.critical(f"Error parsing config file: {e}", exc_info=True)
             raise FileParsingError from e
 
-    def _get_data_list(
-            self,
-            code_link_template: str,
-    ) -> List[Dict[str, str | List]] | None:
+    def _get_data_list(self, code_link_template: str) -> List[Dict[str, str]]:
         """
         Processes all the data based on specified sources and returns the
         procesed data into a list of dictionaries containing the code,
@@ -68,11 +78,11 @@ class CodeEntriesListController:
         """
         if not self.scrapers:
             logger.info("No list of scrapers are available. Nothing will be processed.")
-            return None
+            return []
         else:
             logger.info(f"Getting latest changes from {len(self.scrapers)} source{'s' if len(self.scrapers) > 1 else ''} ")
 
-        entries_list = []
+        entries_list: List[CodeEntriesList] = []
 
         for scraper in self.scrapers:
             entry = scraper().get_data()
@@ -81,24 +91,24 @@ class CodeEntriesListController:
                 continue
 
             entries_list.append(entry)
-        entries_list = self._remove_duplicate_entries(entries_list, code_link_template)
+        clean_list = self._remove_duplicate_entries(entries_list, code_link_template)
 
-        return entries_list
+        return clean_list
 
     def _remove_duplicate_entries(
             self,
             code_entries_lists: List[CodeEntriesList],
             code_link_template: str,
     ) -> List[Dict[str, str]]:
-        if code_entries_lists is None:
-            return None
+        if not code_entries_lists:
+            return []
 
         clean_list = []
 
         if len(code_entries_lists) == 1:
             for source in code_entries_lists:
                 if not source.code_list:
-                    return None
+                    return []
 
                 for entry in source.code_list:
                     code = entry.code
@@ -139,8 +149,8 @@ class CodeEntriesListController:
 
     def _get_code_info(
             self,
-            source: Dict[str, str | List],
-            entry: Dict[str, str],
+            source: CodeEntriesList,
+            entry: CodeEntry,
             code_link_template: str,
             code: str,
     ) -> Dict[str, str]:
@@ -157,13 +167,13 @@ class CodeEntriesListController:
 
     def _restructure_as_dict(
             self,
-            entries_list: List[Any]
-    ) -> List[Dict[str, str]]:
+            entries_list: List[Tuple[Any, ...]]
+    ) -> Dict[str, Union[dict, List[dict]]]:
         # Return a list containing no values if there is nothing to process
         if not entries_list:
-            return []
+            return {}
 
-        data = {
+        data: Dict[str, Union[dict, List[dict]]] = {
             "metadata": {
                 "metadata_id": entries_list[0][0],
                 "game": entries_list[0][1],
@@ -173,7 +183,7 @@ class CodeEntriesListController:
         }
 
         for entry in entries_list:
-            code_info = {
+            code_info: dict = {
                 "game": entry[1],
                 "source_name": entry[3],
                 "source_url": entry[4],
@@ -182,91 +192,89 @@ class CodeEntriesListController:
                 "code_link": entry[7]
             }
 
-            data["entries_list"].append(code_info)
+            if isinstance(data["entries_list"], list):
+                data["entries_list"].append(code_info)
 
         return data
 
 
 class GenshinImpactCELC(CodeEntriesListController):
-    def get_data(self) -> List[Tuple[Any, ...]]:
+    def __init__(self, game: str, config_path: str):
+        self.source_key = "zzz_sources"
+        self.scraper_classes = {
+            Source.POCKET_TACTICS.value: gi.PocketTactics,
+            Source.GAME8.value: gi.Game8,
+            Source.ROCK_PAPER_SHOTGUN.value: gi.RockPaperShotgun,
+            Source.VG247.value: gi.VG247
+        }
+        super().__init__(game, config_path)
+
+    def get_data(self) -> Dict[str, Union[dict, list]]:
         if not self.entries_list:
             entries_list = self._get_data_list(
                 code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}",
             )
 
             self.db.insert_data(entries_list, Game.GENSHIN_IMPACT.value)
-            self.entries_list = self.db.get_data(Game.GENSHIN_IMPACT.value)
-            self.entries_list = self._restructure_as_dict(self.entries_list)
+            raw_entries_list = self.db.get_data(Game.GENSHIN_IMPACT.value)
+            self.entries_list = self._restructure_as_dict(raw_entries_list)
 
             if self.entries_list:
                 logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
 
-    def update_data(self):
+    def update_data(self) -> Dict[str, Union[dict, list]]:
         entries_list = self._get_data_list(
             code_link_template="https://genshin.hoyoverse.com/en/gift?code={code}",
         )
 
         self.db.insert_data(entries_list, Game.GENSHIN_IMPACT.value)
-        self.entries_list = self.db.get_data(Game.GENSHIN_IMPACT.value)
-        self.entries_list = self._restructure_as_dict(self.entries_list)
+        raw_entries_list = self.db.get_data(Game.GENSHIN_IMPACT.value)
+        self.entries_list = self._restructure_as_dict(raw_entries_list)
 
         if self.entries_list:
             logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
 
-    def get_scrapers(self) -> List[Scraper]:
-        source_key = "zzz_sources"
-        scraper_classes = {
-            Source.POCKET_TACTICS.value: gi.PocketTactics,
-            Source.GAME8.value: gi.Game8,
-            Source.ROCK_PAPER_SHOTGUN.value: gi.RockPaperShotgun,
-            Source.VG247.value: gi.VG247
-        }
-
-        return super().get_scrapers(source_key, scraper_classes)
-
 
 class ZenlessZoneZeroCELC(CodeEntriesListController):
-    def get_data(self) -> List[Dict[str, str]]:
+    def __init__(self, game: str, config_path: str):
+        self.source_key = "zzz_sources"
+        self.scraper_classes = {
+            Source.POCKET_TACTICS.value: zzz.PocketTactics,
+            Source.GAME8.value: zzz.Game8,
+            Source.POLYGON.value: zzz.Polygon,
+            Source.VG247.value: zzz.VG247
+        }
+        super().__init__(game, config_path)
+
+    def get_data(self) -> Dict[str, Union[dict, list]]:
         if not self.entries_list:
             entries_list = self._get_data_list(
                 code_link_template="https://zenless.hoyoverse.com/redemption?code={code}",
             )
 
             self.db.insert_data(entries_list, Game.ZENLESS_ZONE_ZERO.value)
-            self.entries_list = self.db.get_data(Game.ZENLESS_ZONE_ZERO.value)
-            self.entries_list = self._restructure_as_dict(self.entries_list)
+            raw_entries_list = self.db.get_data(Game.ZENLESS_ZONE_ZERO.value)
+            self.entries_list = self._restructure_as_dict(raw_entries_list)
 
             if self.entries_list:
                 logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
 
-    def update_data(self) -> List[Tuple[Any, ...]]:
+    def update_data(self) -> Dict[str, Union[dict, list]]:
         entries_list = self._get_data_list(
             code_link_template="https://zenless.hoyoverse.com/redemption?code={code}",
         )
 
         self.db.insert_data(entries_list, Game.ZENLESS_ZONE_ZERO.value)
-        self.entries_list = self.db.get_data(Game.ZENLESS_ZONE_ZERO.value)
-        self.entries_list = self._restructure_as_dict(self.entries_list)
+        raw_entries_list = self.db.get_data(Game.ZENLESS_ZONE_ZERO.value)
+        self.entries_list = self._restructure_as_dict(raw_entries_list)
 
         if self.entries_list:
             logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
-
-    def get_scrapers(self) -> List[Scraper]:
-        source_key = "zzz_sources"
-
-        scraper_classes = {
-            Source.POCKET_TACTICS.value: zzz.PocketTactics,
-            Source.GAME8.value: zzz.Game8,
-            Source.POLYGON.value: zzz.Polygon,
-            Source.VG247.value: zzz.VG247
-        }
-
-        return super().get_scrapers(source_key, scraper_classes)
