@@ -149,6 +149,10 @@ class Database:
                 """
         self.cursor.execute(query, (game_id, modified_date,))
         metadata_id = self.cursor.lastrowid
+
+        if metadata_id is None:
+            raise ValueError("Failed to retrieve metadata id.")
+
         self.connection.commit()
 
         logger.debug(f"Metadata details inserted successfully. (metadata_id: {metadata_id}, game: {game_id}, modified_date: {modified_date})")
@@ -269,9 +273,9 @@ class Database:
         This handles insertion of source name and source URLs into respective tables
         """
         source_name = entry['source_name']
-        source_name_id: int
+        source_name_id: int | None
         source_url = entry['source_url']
-        source_url_id: int
+        source_url_id: int | None
 
         logger.debug(f"Handling source data for source_name: {source_name}, source_url: {source_url}")
 
@@ -282,9 +286,12 @@ class Database:
                     VALUES (?);
                     """
             self.cursor.execute(query, (source_name,))
-            self.connection.commit()
-
             source_name_id = self.cursor.lastrowid
+
+            if source_name_id is None:
+                raise ValueError("Failed to retrieve source_name_id id.")
+
+            self.connection.commit()
             logger.debug(f"Source inserted successfully. (source_id: {source_name_id}, name: {source_name})")
         else:
             query = """
@@ -301,8 +308,12 @@ class Database:
                     VALUES (?, ?)
                     """
             self.cursor.execute(query, (source_name_id, source_url))
-            self.connection.commit()
             source_url_id = self.cursor.lastrowid
+
+            if source_url_id is None:
+                raise ValueError("Failed to retrieve source_name_id id.")
+
+            self.connection.commit()
             logger.debug(f"Source URL inserted successfully. (source_url_id: {source_url_id}, url: {source_url})")
         else:
             query = """
@@ -310,6 +321,10 @@ class Database:
                     """
             self.cursor.execute(query, (source_url,))
             source_url_id = self.cursor.fetchone()[0]
+
+            if source_url_id is None:
+                raise ValueError("Failed to retrieve source_name_id id.")
+
             logger.debug(f"Source URL '{source_url}' found. (source_url_id: {source_url_id})")
 
         return source_url_id
