@@ -1,4 +1,4 @@
-name: flake8 Lint
+name: Lint checking
 
 on:
   pull_request:
