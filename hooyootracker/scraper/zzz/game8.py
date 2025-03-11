@@ -1,6 +1,6 @@
 import re
 import requests
-from typing import Optional, Union
+from typing import Any, Optional, Union
 from bs4 import BeautifulSoup, ResultSet, Tag
 from hooyootracker.constants import Game, Source
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
@@ -23,7 +23,7 @@ class Game8(Scraper):
         return super().get_data()
 
     @handle_source_exc(source_name=source_name)
-    def _get_source_data(self, source_url: str) -> Union[ResultSet, None]:
+    def _get_source_data(self, source_url: str) -> Union[ResultSet[Any], None]:
         response = requests.get(source_url)
         webpage = BeautifulSoup(response.text, 'html.parser')
 

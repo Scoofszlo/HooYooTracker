@@ -29,11 +29,11 @@ class CodeEntriesListController:
         """
 
     @abstractmethod
-    def update_data(self):
+    def update_data(self) -> Dict[str, Union[dict, list]]:
         """
-        Updates the data by deleting all the records from the database,
-        retrieving the latest data from specified sources, and returning it
-        with a list of codes and its reward details
+        Updates the data by deleting all the records from the database, then
+        retrieves the latest data from specified sources, and returns it
+        as a list of codes and their reward details
         """
 
     def get_scrapers(self, source_key: str, scraper_classes: Dict[str, type[Scraper]]) -> List[type[Scraper]]:
@@ -53,7 +53,7 @@ class CodeEntriesListController:
 
         return scraper_list
 
-    def _get_config(self, config_path: str):
+    def _get_config(self, config_path: str) -> Dict[str, Any]:
         """
         This parses the config file specified from the path and loads it.
         If there is an error parsing the config file, this will result in

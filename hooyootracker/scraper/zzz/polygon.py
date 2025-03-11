@@ -1,8 +1,10 @@
 import re
 import requests
 from typing import Any, Optional, Union
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, ResultSet, Tag
 from hooyootracker.constants import Game, Source
+from hooyootracker.logging.logger import logger
+from hooyootracker.scraper._exceptions.custom_exceptions import DataExtractionError
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
 from hooyootracker.scraper.scraper import CodeEntriesList, Scraper
 from hooyootracker.scraper.source_urls import SOURCE_URLS
@@ -23,7 +25,7 @@ class Polygon(Scraper):
         return super().get_data()
 
     @handle_source_exc(source_name=source_name)
-    def _get_source_data(self, source_url: str) -> Any:
+    def _get_source_data(self, source_url: str) -> Union[ResultSet[Any], None]:
         response = requests.get(source_url)
         webpage = BeautifulSoup(response.text, 'html.parser')
 
@@ -51,6 +53,7 @@ class Polygon(Scraper):
     def _get_reward_details(self, entry: Tag) -> Union[str, None]:
         code_and_reward_list_tag = entry.find('span')
         if code_and_reward_list_tag is None or not isinstance(code_and_reward_list_tag, Tag):
+            logger.error(DataExtractionError(source_name=self.source_name, data_extraction_type="reward_desc"), exc_info=True)
             return None
 
         code_and_reward_list = code_and_reward_list_tag.text
