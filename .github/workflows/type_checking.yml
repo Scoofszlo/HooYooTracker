@@ -22,4 +22,4 @@ jobs:
                 pip install mypy
                 pip install flask
             - name: Run mypy
-              run: python -m mypy hooyootracker --install-types --non-interactive
+              run: python -m mypy hooyootracker --install-types --non-interactive --check-untyped-defs
