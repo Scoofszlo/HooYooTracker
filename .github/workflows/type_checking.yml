@@ -20,8 +20,6 @@ jobs:
               run: |
                 python -m pip install --upgrade pip
                 pip install mypy
-                pip install poetry
-                poetry install
-                mypy --install-types --non-interactive
+                pip install flask
             - name: Run mypy
-              run: mypy hooyootracker
+              run: python -m mypy hooyootracker --install-types --non-interactive

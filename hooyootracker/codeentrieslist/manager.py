@@ -11,7 +11,7 @@ from hooyootracker.codeentrieslist.controller import (
 class CodeEntriesListManager():
     def __init__(self, game: str, config_path: str) -> None:
         self.controller: CodeEntriesListController = self._get_controller_class(game, config_path)
-        self.entries_list: Dict[str, Union[dict, list]]
+        self.entries_list: Dict[str, Union[dict, list]] = {}
 
     def get_data(self) -> Dict[str, Union[dict, list]]:
         if not self.entries_list:
