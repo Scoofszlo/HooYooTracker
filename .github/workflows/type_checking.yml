@@ -1,4 +1,4 @@
-name: Type checking w/ mypy
+name: Type checking
 
 on:
     pull_request:
