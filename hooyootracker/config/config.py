@@ -34,7 +34,6 @@ class Config:
                 logger.debug("Config file loaded successfully")
                 logger.debug(f"Config data: {config}")
                 return config
-
         except Exception as e:
             logger.critical(f"Error parsing config file: {e}", exc_info=True)
             raise FileParsingError from e
