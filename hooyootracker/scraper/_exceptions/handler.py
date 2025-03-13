@@ -1,6 +1,6 @@
 from functools import wraps
 from hooyootracker.logging.logger import logger
-from .custom_exceptions import (
+from .exceptions import (
     SourceScrapingError,
     DataExtractionError
 )

@@ -4,7 +4,7 @@ from typing import Any, Optional, Union
 from bs4 import BeautifulSoup, ResultSet, Tag
 from hooyootracker.constants import Game, Source
 from hooyootracker.logging.logger import logger
-from hooyootracker.scraper._exceptions.custom_exceptions import DataExtractionError
+from hooyootracker.scraper._exceptions.exceptions import DataExtractionError
 from hooyootracker.scraper._exceptions.handler import handle_data_extraction_exc, handle_source_exc
 from hooyootracker.scraper.scraper import CodeEntriesList, Scraper
 from hooyootracker.scraper.source_urls import SOURCE_URLS

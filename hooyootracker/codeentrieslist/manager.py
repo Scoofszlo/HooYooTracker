@@ -1,6 +1,6 @@
 from typing import Dict, Union
 from hooyootracker.constants import Game
-from hooyootracker.codeentrieslist._exceptions import InvalidGameType
+from hooyootracker.codeentrieslist.exceptions import InvalidGameType
 from hooyootracker.codeentrieslist.controller import (
     CodeEntriesListController,
     GenshinImpactCELC,
