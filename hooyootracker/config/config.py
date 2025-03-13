@@ -8,12 +8,12 @@ from hooyootracker.logging.logger import logger
 class Config:
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls) -> 'Config':
         if cls._instance is None:
             cls._instance = super(Config, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.raw_config = self._load_config()
 
     def get_sources(self, source_key: str) -> List[str]:
