@@ -32,6 +32,7 @@ class Config:
             with open(CONFIG_FILE_PATH, 'r') as file:
                 config = toml.load(file)
                 logger.debug("Config file loaded successfully")
+                logger.debug(f"Config data: {config}")
                 return config
 
         except Exception as e:
