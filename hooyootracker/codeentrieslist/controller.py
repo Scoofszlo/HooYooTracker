@@ -1,18 +1,17 @@
-import toml
 from abc import abstractmethod
 from typing import Any, Dict, List, Tuple, Union
+from hooyootracker.config.config import Config
 from hooyootracker.logging.logger import logger
 from hooyootracker.constants import Game, Source
 from hooyootracker.db.database import Database
-from hooyootracker.codeentrieslist._exceptions import FileParsingError
 from hooyootracker.scraper import gi, zzz
 from hooyootracker.scraper.scraper import CodeEntriesList, CodeEntry, Scraper
 
 
 class CodeEntriesListController:
-    def __init__(self, game: str, config_path: str):
+    def __init__(self, game: str):
         self.db: Database = Database()
-        self.config: Dict[str, Any] = self._get_config(config_path)
+        self.config: Config = Config()
         self.source_key: str
         self.scraper_classes: Dict[str, type[Scraper]]
         self.scrapers: List[type[Scraper]] = self.get_scrapers(
@@ -41,7 +40,7 @@ class CodeEntriesListController:
         This gets the list of scrapers to be used based on the sources listed
         from the config file
         """
-        sources = self.config['sources'][source_key]
+        sources = self.config.get_sources(source_key=source_key)
 
         scraper_list: List[type[Scraper]] = []
 
@@ -52,23 +51,6 @@ class CodeEntriesListController:
                 logger.info(f"\"{source}\" does not exist in available scrapers. Skipping.")
 
         return scraper_list
-
-    def _get_config(self, config_path: str) -> Dict[str, Any]:
-        """
-        This parses the config file specified from the path and loads it.
-        If there is an error parsing the config file, this will result in
-        exception, thus halting the program.
-        """
-
-        logger.debug(f"Attempting to open config file at: {config_path}")
-
-        try:
-            with open(config_path, 'r') as file:
-                return toml.load(file)
-            logger.debug("Config file loaded successfully")
-        except Exception as e:
-            logger.critical(f"Error parsing config file: {e}", exc_info=True)
-            raise FileParsingError from e
 
     def _get_data_list(self, code_link_template: str) -> List[Dict[str, str]]:
         """
@@ -199,7 +181,7 @@ class CodeEntriesListController:
 
 
 class GenshinImpactCELC(CodeEntriesListController):
-    def __init__(self, game: str, config_path: str):
+    def __init__(self, game: str):
         self.source_key = "zzz_sources"
         self.scraper_classes = {
             Source.POCKET_TACTICS.value: gi.PocketTactics,
@@ -207,7 +189,7 @@ class GenshinImpactCELC(CodeEntriesListController):
             Source.ROCK_PAPER_SHOTGUN.value: gi.RockPaperShotgun,
             Source.VG247.value: gi.VG247
         }
-        super().__init__(game, config_path)
+        super().__init__(game)
 
     def get_data(self) -> Dict[str, Union[dict, list]]:
         if not self.entries_list:
@@ -240,7 +222,7 @@ class GenshinImpactCELC(CodeEntriesListController):
 
 
 class ZenlessZoneZeroCELC(CodeEntriesListController):
-    def __init__(self, game: str, config_path: str):
+    def __init__(self, game: str):
         self.source_key = "zzz_sources"
         self.scraper_classes = {
             Source.POCKET_TACTICS.value: zzz.PocketTactics,
@@ -248,7 +230,7 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
             Source.POLYGON.value: zzz.Polygon,
             Source.VG247.value: zzz.VG247
         }
-        super().__init__(game, config_path)
+        super().__init__(game)
 
     def get_data(self) -> Dict[str, Union[dict, list]]:
         if not self.entries_list:
