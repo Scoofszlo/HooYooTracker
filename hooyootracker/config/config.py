@@ -30,8 +30,10 @@ class Config:
 
         try:
             with open(CONFIG_FILE_PATH, 'r') as file:
-                return toml.load(file)
-            logger.debug("Config file loaded successfully")
+                config = toml.load(file)
+                logger.debug("Config file loaded successfully")
+                return config
+
         except Exception as e:
             logger.critical(f"Error parsing config file: {e}", exc_info=True)
             raise FileParsingError from e
