@@ -19,6 +19,9 @@ class Config:
     def get_sources(self, source_key: str) -> List[str]:
         return self.raw_config['sources'][source_key]
 
+    def get_log_level(self) -> str:
+        return self.raw_config['logger']["debug_level"]
+
     def _load_config(self) -> Dict[str, Any]:
         """
         This parses the config file specified from the path and loads it.

@@ -1,19 +1,17 @@
 import logging
 import logging.handlers
-import toml
-from typing import Any, Dict
-from hooyootracker.constants import CONFIG_FILE_PATH, LOG_DIR
+from hooyootracker.config.config import Config
+from hooyootracker.constants import LOG_DIR
 
 
 logger: logging.Logger
+config = Config()
 
 
 def init_logger():
     global logger
 
-    # Initialize variables for logger settings
-    logger_settings = _get_logger_settings()
-    console_handler_level = _identify_console_handler_level(logger_settings)
+    console_handler_level = _identify_console_handler_level()
 
     logger = logging.getLogger(__name__)
     logger.setLevel("DEBUG")
@@ -42,8 +40,8 @@ def init_logger():
     logger.addHandler(file_handler)
 
 
-def _identify_console_handler_level(logger_settings: Dict[str, Any]) -> int:
-    logger_level = logger_settings["debug_level"]
+def _identify_console_handler_level() -> int:
+    logger_level = config.get_log_level()
     console_handler_level = logger_level.upper()
 
     log_levels = {
@@ -59,9 +57,3 @@ def _identify_console_handler_level(logger_settings: Dict[str, Any]) -> int:
     else:
         logging.getLogger(__name__).warning(f"Invalid logging level '{console_handler_level}' provided. Defaulting to INFO.")
         return logging.INFO
-
-
-def _get_logger_settings() -> Dict[str, Any]:
-    with open(CONFIG_FILE_PATH, 'r') as file:
-        config = toml.load(file)
-    return config["logger"]
