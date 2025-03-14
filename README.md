@@ -13,7 +13,7 @@ As a fan of both games and out of boredom, I decided to create a program that wo
 
 ## Installation and Usage
 
-There are different ways to install the app. For non-techy users, installing via Releases page of this repository is recommened as you just literally click some stuff and you're good to go! However, installing the app via Docker is most recommended if you want to run the app in a Linux or macOS
+There are different ways to install the app. For non-techy users, installing via Releases page of this repository is recommended as you just literally click some stuff and you're good to go! However, installing the app via Docker is the most recommended one if you want to run the app in a Linux or macOS environment.
 
 ### via Releases
 1. Download the latest version from the [Releases](https://github.com/Scoofszlo/HooYooTracker/releases) page.
@@ -24,12 +24,12 @@ There are different ways to install the app. For non-techy users, installing via
 
 ### via Docker
 
-1. Install Docker on your system
+1. Install Docker on your system.
 2. Build the Docker image of HooYooTracker:
     ```sh
     docker build -t hooyootracker .
     ```
-3. Create a Docker volume for data storage of the app
+3. Create a Docker volume for data storage of the app:
     ```sh
     docker volume create hooyootracker_data
     ```
@@ -50,7 +50,7 @@ There are different ways to install the app. For non-techy users, installing via
 4. Done!
 
 ## Notes
-- **Tested on Windows**: This program was created on Windows. The Docker version works well on my system, in which I assume that it will also work on Linux and macOS since it's the Docker that manages the stuffm though I do not guarantee that it will 100% completely  okay.
+- **Tested only on Windows**: This program was created on Windows. The Docker version works well on my system, in which I assume that it will also work on Linux and macOS since it's the Docker that manages these kind of stuff (no guarantees though).
 - **Currently supports Python v3.10 and up**: This program was supposed to support at least Python v3.8 but due to certain features that I have used throughout the program and external dependencies requirement, only Python v3.10 and above are only supported.
 
 ## Contributing
