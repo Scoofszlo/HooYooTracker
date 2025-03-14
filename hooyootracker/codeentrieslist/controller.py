@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from typing import Any, Dict, List, Tuple, Union
+from hooyootracker.codeentrieslist.exceptions import InvalidGameType
 from hooyootracker.config.config import Config
 from hooyootracker.logging.logger import logger
 from hooyootracker.constants import Game, Source
@@ -260,3 +261,15 @@ class ZenlessZoneZeroCELC(CodeEntriesListController):
             logger.info(f"Total number of codes: {len(self.entries_list['entries_list'])}")
 
         return self.entries_list
+
+
+def _get_controller_class(game: str) -> CodeEntriesListController:
+    CODE_ENTRIES_LIST_CONTROLLER = {
+        Game.GENSHIN_IMPACT.value: GenshinImpactCELC,
+        Game.ZENLESS_ZONE_ZERO.value: ZenlessZoneZeroCELC
+    }
+
+    try:
+        return CODE_ENTRIES_LIST_CONTROLLER[game](game)
+    except (ValueError, KeyError):
+        raise InvalidGameType(game) from None

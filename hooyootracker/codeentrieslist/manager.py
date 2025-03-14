@@ -1,16 +1,10 @@
 from typing import Dict, Union
-from hooyootracker.constants import Game
-from hooyootracker.codeentrieslist.exceptions import InvalidGameType
-from hooyootracker.codeentrieslist.controller import (
-    CodeEntriesListController,
-    GenshinImpactCELC,
-    ZenlessZoneZeroCELC
-)
+from hooyootracker.codeentrieslist.controller import CodeEntriesListController, _get_controller_class
 
 
 class CodeEntriesListManager():
     def __init__(self, game: str) -> None:
-        self.controller: CodeEntriesListController = self._get_controller_class(game)
+        self.controller: CodeEntriesListController = _get_controller_class(game)
         self.entries_list: Dict[str, Union[dict, list]] = {}
 
     def get_data(self) -> Dict[str, Union[dict, list]]:
@@ -21,15 +15,3 @@ class CodeEntriesListManager():
 
     def update_data(self):
         self.entries_list = self.controller.update_data()
-
-    @staticmethod
-    def _get_controller_class(game: str) -> CodeEntriesListController:
-        try:
-            CODE_ENTRIES_LIST_CONTROLLER = {
-                Game.GENSHIN_IMPACT.value: GenshinImpactCELC,
-                Game.ZENLESS_ZONE_ZERO.value: ZenlessZoneZeroCELC
-            }
-
-            return CODE_ENTRIES_LIST_CONTROLLER[game](game)
-        except (ValueError, KeyError):
-            raise InvalidGameType(game) from None
