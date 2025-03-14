@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from hooyootracker.constants import CONFIG_FILE_PATH, Game
+from hooyootracker.constants import Game
 from hooyootracker.codeentrieslist.manager import CodeEntriesListManager
 
 bp = Blueprint("pages", __name__)
@@ -11,17 +11,11 @@ def get_manager(game):
     global dm_genshin, dm_zzz
     if game == Game.GENSHIN_IMPACT.value:
         if dm_genshin is None:
-            dm_genshin = CodeEntriesListManager(
-                game=game,
-                config_path=CONFIG_FILE_PATH
-            )
+            dm_genshin = CodeEntriesListManager(game=game)
         return dm_genshin
     elif game == Game.ZENLESS_ZONE_ZERO.value:
         if dm_zzz is None:
-            dm_zzz = CodeEntriesListManager(
-                game=game,
-                config_path=CONFIG_FILE_PATH
-            )
+            dm_zzz = CodeEntriesListManager(game=game)
         return dm_zzz
 
 
