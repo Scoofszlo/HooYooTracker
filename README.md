@@ -7,10 +7,20 @@ HooYooTracker is a webapp that scrapes Genshin Impact and Zenless Zero codes fro
 As a fan of both games and out of boredom, I decided to create a program that would simplify the process of finding released codes from these two games without having to navigate from several websites or other sources. Another reason is that I want to improve my mastery in Python as I believe I have so many things to learn, so yeah.
 
 ## Requirements
-- Windows OS
-- Python 3.10 or above
+
+- **Windows** (Linux and macOS are also supported, but only if installed via the Docker method)
+- **Python v3.10 or above**
 
 ## Installation and Usage
+
+There are different ways to install the app. For non-techy users, installing via Releases page of this repository is recommened as you just literally click some stuff and you're good to go! However, installing the app via Docker is most recommended if you want to run the app in a Linux or macOS
+
+### via Releases
+1. Download the latest version from the [Releases](https://github.com/Scoofszlo/HooYooTracker/releases) page.
+2. Extract the downloaded .zip file.
+3. Open the `HooYooTracker` folder.
+4. Double-click the `run.bat`.
+5. Done!
 
 ### via Docker
 
@@ -39,15 +49,8 @@ As a fan of both games and out of boredom, I decided to create a program that wo
 3. Double-click the `run.bat`.
 4. Done!
 
-### via Releases
-1. Download the latest version from the [Releases](https://github.com/Scoofszlo/HooYooTracker/releases) page.
-2. Extract the downloaded .zip file.
-3. Open the `HooYooTracker` folder.
-4. Double-click the `run.bat`.
-5. Done!
-
 ## Notes
-- **Tested only on Windows**: This program was created on a Windows laptop, so I'm not sure if this will work on other operating systems.
+- **Tested on Windows**: This program was created on Windows. The Docker version works well on my system, in which I assume that it will also work on Linux and macOS since it's the Docker that manages the stuffm though I do not guarantee that it will 100% completely  okay.
 - **Currently supports Python v3.10 and up**: This program was supposed to support at least Python v3.8 but due to certain features that I have used throughout the program and external dependencies requirement, only Python v3.10 and above are only supported.
 
 ## Contributing
