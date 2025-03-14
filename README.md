@@ -12,6 +12,23 @@ As a fan of both games and out of boredom, I decided to create a program that wo
 
 ## Installation and Usage
 
+### via Docker
+
+1. Install Docker on your system
+2. Build the Docker image of HooYooTracker:
+    ```sh
+    docker build -t hooyootracker .
+    ```
+3. Create a Docker volume for data storage of the app
+    ```sh
+    docker volume create hooyootracker_data
+    ```
+4. Run the Docker container:
+    ```sh
+    docker run -p 8080:8080 -v hooyootracker_data:/app hooyootracker
+    ```
+5. Open your web browser and head to `http://localhost:8080`.
+
 ### via Git clone
 
 1. Clone the stable release:
