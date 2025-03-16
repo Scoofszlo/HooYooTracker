@@ -10,20 +10,22 @@ IF NOT EXIST .venv (
 echo Activating virtual environment...
 call .venv\Scripts\activate.bat
 
-:: Check if poetry is installed. If not, install it
-echo Checking for Poetry installation...
-poetry --version >nul 2>&1
+:: Check if uv is installed. If not, install it
+echo Checking for uv installation...
+uv --version >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
-    echo Poetry not found. Installing Poetry...
-    pip install poetry
-    :: Install dependencies using poetry
-    echo Installing dependencies with Poetry...
-    poetry install
+    echo uv not found. Installing uv...
+    pip install uv==0.6.6
 ) ELSE (
-    echo Poetry is already installed
+    echo uv is already installed
 )
 
+:: Install/update dependencies using uv
+echo Installing/updating dependencies with uv...
+uv pip install -r pyproject.toml
+
 :: Run the HooYooTracker package
+echo.
 echo Starting HooYooTracker...
 echo.
 python -m hooyootracker
