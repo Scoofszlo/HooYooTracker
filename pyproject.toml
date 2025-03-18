@@ -2,8 +2,8 @@
 name = "hooyootracker"
 version = "0.3.2"
 description = "A webapp that retrieves redeemable codes from various sources and organize them"
-authors = ["Scoofszlo <scoofszlo@gmail.com>"]
-license = "MIT"
+authors = [{ name = "Scoofszlo", email = "scoofszlo@gmail.com" }]
+license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -23,3 +23,6 @@ dev = [
     "types-toml>=0.10.8.20240310",
     "types-waitress>=3.0.1.20241117",
 ]
+
+[tool.setuptools]
+packages = ["hooyootracker"]
