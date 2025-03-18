@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.10-alpine
 WORKDIR /app
 
 RUN pip install uv==0.6.6 --no-cache-dir
