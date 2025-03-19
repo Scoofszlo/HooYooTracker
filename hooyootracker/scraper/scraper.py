@@ -1,20 +1,31 @@
 from abc import abstractmethod
-from typing import Dict, List, Optional
+from typing import Any, List, Optional
+from dataclasses import dataclass
 from bs4 import Tag
-from hooyootracker.logger import Logger
+from hooyootracker.logging.logger import logger
 
-logger = Logger()
+
+@dataclass
+class CodeEntry:
+    code: str
+    reward_details: str
+
+
+@dataclass
+class CodeEntriesList:
+    source_name: str
+    source_url: str
+    code_list: List[CodeEntry]
 
 
 class Scraper:
-    def __init__(self, source_name: str, source_url: str):
-        self.code_entries_list: Dict[str, str | List] = {
-            "source_name": source_name,
-            "source_url": source_url,
-            "code_list": []
-        }
+    def __init__(self):
+        self.code_entries_list: CodeEntriesList
 
-    def get_data(self, source_name: str, source_url: str):
+    def get_data(self) -> Optional[CodeEntriesList]:
+        source_name = self.code_entries_list.source_name
+        source_url = self.code_entries_list.source_url
+
         logger.info(f"Getting data from {source_name} ({source_url})")
 
         # Extracts the data from source that has the container containing
@@ -22,7 +33,7 @@ class Scraper:
         source_data = self._get_source_data(source_url)
 
         if not source_data:
-            return
+            return None
         else:
             logger.debug(f"Scraped source data: {source_data}")
 
@@ -32,7 +43,7 @@ class Scraper:
         for item in source_data:
             extracted_data = self._extract_data(item)
             if extracted_data:
-                self.code_entries_list["code_list"].append(extracted_data)
+                self.code_entries_list.code_list.append(extracted_data)
                 success_ctr += 1
             else:
                 continue
@@ -42,37 +53,34 @@ class Scraper:
         return self.code_entries_list
 
     @abstractmethod
-    def _get_source_data(self, source_url: str) -> Optional[List[Tag]]:
-        """Scrapes source data from specified URL source and returns a Tag
-        containing list of codes and reward details"""
+    def _get_source_data(self, source_url: str) -> Any:
+        """Scrapes source data from specified URL source and returns a list of Tags
+        containing codes and reward details"""
         pass
 
-    def _extract_data(self, item: Tag) -> Optional[Dict[str, str]]:
+    def _extract_data(self, item: Tag) -> Optional[CodeEntry]:
         """Extracts the code and reward description from the entry,
-        organizing them into dictionary, thus returning it"""
+        organizing them into a CodeEntry dataclass, thus returning it"""
         logger.debug(f"Extracting data from entry: {item}")
 
         code = self._get_code(item)
         reward_details = self._get_reward_details(item)
 
         if not code or not reward_details:
-            return
+            return None
 
-        entry_details = {
-            "code": code,
-            "reward_details": reward_details
-        }
+        entry_details = CodeEntry(code, reward_details)
 
         logger.debug(f"Extracted info: {entry_details}")
 
         return entry_details
 
     @abstractmethod
-    def _get_code(self, entry: Tag) -> str:
-        """Extracts the code and return it as a string"""
+    def _get_code(self, entry: Tag) -> Optional[str]:
+        """Extracts the code and returns it as a string."""
         pass
 
     @abstractmethod
-    def _get_reward_details(self, entry: Tag) -> str:
-        """Extracts the reward details and return it as a string"""
+    def _get_reward_details(self, entry: Tag) -> Optional[str]:
+        """Extracts the reward details and returns it as a string"""
         pass

@@ -1,7 +1,6 @@
-from hooyootracker.logger import Logger
+from hooyootracker.logging.logger import logger
 from hooyootracker.webapp import app
 
-logger = Logger()
 logger.info("HooYooTracker has been started")
 
 app.run()
