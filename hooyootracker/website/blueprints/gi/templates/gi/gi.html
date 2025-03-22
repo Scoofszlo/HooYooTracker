@@ -1,7 +1,7 @@
-{% extends "home/base.html" %}
+{% extends "base.html" %}
 
 {% block gi_css %}
-<link href="{{ url_for('static', filename='gi.css') }}" rel="stylesheet" />
+<link href="{{ url_for('gi.static', filename='gi.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
                 <h1>List of Codes</h1>
                 <p>Last refreshed: <time datetime="{{data.metadata.modified_date}}" id="bc_target_date"></time><span id="bc_time_interval"></span><span id="bc_show_current_time_and_date"></span></p>
             </div>
-            <form method="POST" action="/" class="bc_form_container">
+            <form method="POST" action="/gi" class="bc_form_container">
                 <input type="submit" value="Refresh data" name="refresh_data"/>
             </form>
         </div>
