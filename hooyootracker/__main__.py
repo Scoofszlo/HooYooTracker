@@ -1,6 +1,15 @@
+import webbrowser
+from waitress import serve
 from hooyootracker.logging.logger import logger
-from hooyootracker.webapp import app
+from hooyootracker.website.app import create_app
 
-logger.info("HooYooTracker has been started")
+if __name__ == "__main__":
+    """
+    This runs the web app and is serving using the Waitress WSGI server.
+    """
 
-app.run()
+    logger.info("HooYooTracker has been started")
+
+    app = create_app()
+    webbrowser.open("http://127.0.0.1:8080")
+    serve(app, host='0.0.0.0', port=8080)
