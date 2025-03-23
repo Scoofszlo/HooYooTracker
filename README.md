@@ -22,26 +22,27 @@ As a fan of both games and out of boredom, I decided to create a program that wo
         ```
 2. Extract the downloaded .zip file (if downloaded via GitHub Releases).
 3. Open the `HooYooTracker` folder.
-4. Double-click the `run.bat` for Windows or `run.sh` for Linux. (For Linux users, ensure `Allow executing file as program` checkbox is checked to be able to run it.)
+4. Double-click the `run-windows-standard.bat` for Windows or `run-linux-standard.sh` for Linux. (For Linux users, ensure `Allow executing file as program` checkbox is checked to be able to run it.)
 5. Done!
 
 ### via Docker (supports Windows/Linux/macOS)
 
-1. Install Docker on your system.
-2. Build the Docker image of HooYooTracker:
+1. Install Docker on your system and open it in the background.
+2. If you are Windows/Linux user, skip Steps 3-5 and run `run-windows-docker.bat` or `run-linux-docker.bat` according to your OS.
+3. Build the Docker image of HooYooTracker:
     ```sh
     docker build -t hooyootracker .
     ```
-3. Create a Docker volume for data storage of the app:
+4. Create a Docker volume for data storage of the app:
     ```sh
     docker volume create hooyootracker_data
     ```
-4. Run the Docker container:
+5. Run the Docker container:
     ```sh
     docker run -p 8080:8080 -v hooyootracker_data:/app hooyootracker
     ```
-5. Open your web browser and head to `http://localhost:8080`.
-6. Done!
+6. Open your web browser and head to `http://localhost:8080`.
+7. Done!
 
 ## Usage
 
