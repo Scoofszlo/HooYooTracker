@@ -11,4 +11,4 @@ sudo docker volume create hooyootracker_data
 # Run the HooYooTracker package
 echo "Starting HooYooTracker..."
 echo
-sudo docker run -q -p 8080:8080 -q -v hooyootracker_data:/app hooyootracker
+sudo docker run -q -p 8080:8080 -q -v hooyootracker_data:/app/program_data hooyootracker
