@@ -1,2 +1,3 @@
 # Ignore program_data directory as this contains user configuration data
 /program_data
+__pycache__
