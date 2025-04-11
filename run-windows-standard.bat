@@ -5,7 +5,7 @@ echo Checking for uv installation...
 uv --version >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
     echo uv not found. Installing uv...
-    pip install uv==0.6.6
+    pip install uv==0.6.14
 ) ELSE (
     echo uv is already installed
 )
