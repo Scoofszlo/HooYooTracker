@@ -1,0 +1,33 @@
+{
+  "name": "hooyootracker",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w apps/web",
+    "dev:api": "npm run dev -w apps/api",
+    "build:web": "npm run build -w apps/web",
+    "build:api": "npm run build -w apps/api",
+    "lint": "npm run lint -w apps/web && npm run lint -w apps/api",
+    "type": "npm run type -w apps/web && npm run type -w apps/api",
+    "build": "npm run build:web && npm run build:api",
+    "version:patch": "npm version patch --no-git-tag-version && npm run version:patch -w apps/web && npm run version:patch -w apps/api && npm run version:patch -w packages/core && npm run version:patch -w packages/config",
+    "version:minor": "npm version minor --no-git-tag-version && npm run version:minor -w apps/web && npm run version:minor -w apps/api && npm run version:minor -w packages/core && npm run version:minor -w packages/config",
+    "version:major": "npm version major --no-git-tag-version && npm run version:major -w apps/web && npm run version:major -w apps/api && npm run version:major -w packages/core && npm run version:major -w packages/config",
+    "dev": "concurrently --kill-others --names \"WEB,API\" --prefix-colors \"blue,green\" \"npm run dev -w apps/web\" \"npm run dev -w apps/api\"",
+    "start": "node scripts/start.js"
+  },
+  "keywords": [],
+  "author": "Scoofszlo <scoofszlo@gmail.com> (https://github.com/Scoofszlo/)",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "concurrently": "9.2.1"
+  },
+  "volta": {
+    "node": "22.13.0"
+  }
+}

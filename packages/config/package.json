@@ -1,0 +1,22 @@
+{
+  "name": "@hooyootracker/config",
+  "version": "1.0.0",
+  "description": "\"Shared ESLint and Prettier config\"",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "exports": {
+    "./eslint": "./src/eslint.js",
+    "./prettier": "./src/prettier.js"
+  },
+  "scripts": {
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "eslint-plugin-prettier": "^5.5.5",
+    "typescript-eslint": "^8.56.1"
+  }
+}
