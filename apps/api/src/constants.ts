@@ -10,6 +10,10 @@ export const GI_SOURCES = {
   ROCK_PAPER_SHOTGUN: {
     name: "Rock Paper Shotgun",
     url: "https://www.rockpapershotgun.com/genshin-impact-codes-list",
+  },
+  VG247: {
+    name: "VG247",
+    url: "https://www.vg247.com/genshin-impact-codes",
   }
 };
 
