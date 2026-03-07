@@ -1,8 +1,8 @@
 import cors from "cors";
 import express, { type Request, type Response } from "express";
+import { GIGame8Scraper } from "./scrapers/gi/game8.ts";
+import { ZZZGame8Scraper } from "./scrapers/zzz/game8.ts";
 import { RedeemCodeService } from "./service/index.ts";
-import { GIGame8Scraper } from "./srapers/gi/game8.ts";
-import { ZZZGame8Scraper } from "./srapers/zzz/game8.ts";
 import type { GameQuery } from "./types.ts";
 
 const app = express();

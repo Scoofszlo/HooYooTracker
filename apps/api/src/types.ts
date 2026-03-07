@@ -1,4 +1,4 @@
-import type { RedeemCodeScraper } from "./srapers/base.ts";
+import type { RedeemCodeScraper } from "./scrapers/base.ts";
 
 export type RedeemCodeServiceConstructor = {
   giScrapers?: RedeemCodeScraper[];

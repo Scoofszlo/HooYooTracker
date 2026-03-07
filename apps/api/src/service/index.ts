@@ -1,5 +1,5 @@
 import type { RedeemCode } from "@hooyootracker/core";
-import type { RedeemCodeScraper } from "../srapers/base.ts";
+import type { RedeemCodeScraper } from "../scrapers/base.ts";
 import type { GameQuery, RedeemCodeServiceConstructor } from "../types.ts";
 
 export class RedeemCodeService {
