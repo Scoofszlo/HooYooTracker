@@ -1,17 +1,17 @@
 import type { RedeemCode } from "@hooyootracker/core";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { GI_SOURCES } from "../../constants.ts";
+import { ZZZ_SOURCES } from "../../constants.ts";
 import type { RedeemCodeScraper } from "../base.ts";
 
-export class GIVG247Scraper implements RedeemCodeScraper {
-  sourceName: string = GI_SOURCES.VG247.name;
+export class ZZZVG247Scraper implements RedeemCodeScraper {
+  sourceName: string = ZZZ_SOURCES.VG247.name;
 
   async scrape(): Promise<RedeemCode[]> {
-    const data = await axios.get(GI_SOURCES.VG247.url);
+    const data = await axios.get(ZZZ_SOURCES.VG247.url);
     const results: RedeemCode[] = [];
     const $ = cheerio.load(data.data);
-    const li = $("div.article_body_content > ul:eq(1) li");
+    const li = $("div.article_body_content > ul:eq(0) li");
 
     li.each((_, element) => {
       const $li = $(element);
@@ -24,6 +24,7 @@ export class GIVG247Scraper implements RedeemCodeScraper {
       });
     })
 
+    console.log(results);
     return results;
   }
 }

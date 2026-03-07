@@ -25,5 +25,9 @@ export const ZZZ_SOURCES = {
   PCGAMESN: {
     name: "PCGamesN",
     url: "https://www.pcgamesn.com/zenless-zone-zero/codes",
+  },
+  VG247: {
+    name: "VG247",
+    url: "https://www.vg247.com/zenless-zone-zero-codes",
   }
 };
