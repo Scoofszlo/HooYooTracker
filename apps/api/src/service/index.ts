@@ -16,12 +16,30 @@ export class RedeemCodeService {
       const allResults = await Promise.all(
         this.giScrapers.map((scraper) => scraper.scrape()),
       );
-      return allResults.flat();
+      const flattenedResults = allResults.flat();
+      const uniqueMap = new Map<string, RedeemCode>();
+
+      flattenedResults.forEach((code) => {
+        if (!uniqueMap.has(code.code)) {
+          uniqueMap.set(code.code, code);
+        }
+      });
+
+      return Array.from(uniqueMap.values());
     } else if (game === "zzz") {
       const allResults = await Promise.all(
         this.zzzScrapers.map((scraper) => scraper.scrape()),
       );
-      return allResults.flat();
+      const flattenedResults = allResults.flat();
+      const uniqueMap = new Map<string, RedeemCode>();
+
+      flattenedResults.forEach((code) => {
+        if (!uniqueMap.has(code.code)) {
+          uniqueMap.set(code.code, code);
+        }
+      });
+
+      return Array.from(uniqueMap.values());
     }
     throw new Error(`Unsupported game query: ${game}`);
   }
