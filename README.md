@@ -2,6 +2,9 @@
 
 HooYooTracker is a webapp that scrapes Genshin Impact and Zenless Zero codes from various sources and compiles them into one organized list. 
 
+> [!IMPORTANT]  
+> This version is not being developed anymore and will receive no updates. To use the new version, switch to the `main` branch of this project's repository.
+
 ## Motivation
 
 As a fan of both games and out of boredom, I decided to create a program that would simplify the process of finding released codes from these two games without having to navigate from several websites or other sources. Another reason is that I want to improve my mastery in Python as I believe I have so many things to learn, so yeah.
