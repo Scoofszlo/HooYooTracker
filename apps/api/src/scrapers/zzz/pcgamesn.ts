@@ -11,7 +11,7 @@ export class ZZZPCGamesNScraper implements RedeemCodeScraper {
     const data = await axios.get(ZZZ_SOURCES.PCGAMESN.url);
     const results: RedeemCode[] = [];
     const $ = cheerio.load(data.data);
-    const rows = $("div.entry-content ul:eq(0) li"); // Select all rows except the header row
+    const rows = $("div.entry-content ul:eq(0) li");
 
     rows.each((_, element) => {
       const $li = $(element);
@@ -20,6 +20,7 @@ export class ZZZPCGamesNScraper implements RedeemCodeScraper {
         .text()
         .replace(/\w+\s+-\s+/g, "")
         .trim();
+
       results.push({
         source: this.sourceName,
         code: code,

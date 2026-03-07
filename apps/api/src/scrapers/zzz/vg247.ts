@@ -20,6 +20,7 @@ export class ZZZVG247Scraper implements RedeemCodeScraper {
         .text()
         .replace(/\w+:\s+/g, "")
         .trim();
+
       results.push({
         source: this.sourceName,
         code: code,
@@ -27,7 +28,6 @@ export class ZZZVG247Scraper implements RedeemCodeScraper {
       });
     });
 
-    console.log(results);
     return results;
   }
 }

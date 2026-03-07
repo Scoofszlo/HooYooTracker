@@ -15,7 +15,7 @@ export class ZZZGame8Scraper implements RedeemCodeScraper {
 
     rows.each((_, element) => {
       const $row = $(element);
-      const code = $row.find("input").val() as string; // Get the value of the input element
+      const code = $row.find("input").val() as string;
       const description = () => {
         const td = $row.find("td:nth-child(2)");
         const divs = td.find("div");
@@ -30,7 +30,7 @@ export class ZZZGame8Scraper implements RedeemCodeScraper {
         });
 
         return rewards.join(", ");
-      }; // Get the text of the second td element
+      };
 
       results.push({
         source: this.sourceName,
