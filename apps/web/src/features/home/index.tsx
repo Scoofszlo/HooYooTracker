@@ -83,16 +83,19 @@ function CodeList({
       <LastFetched date={result.date} />
       <div className="grid sm:grid-cols-2 gap-4">
         {result.codes.map((res) => (
-          <Card key={res.code}>
-            <a
-              className="text-xl font-bold hover:cursor-pointer hover:text-md-on-background/62 transition-all"
-              href={getLink(res.code)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {res.code}
-            </a>
-            <p>{res.description}</p>
+          <Card key={res.code} className="gap-4">
+            <div className="flex flex-col">
+              <a
+                className="text-xl font-bold hover:cursor-pointer hover:text-md-on-background/62 transition-all"
+                href={getLink(res.code)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {res.code}
+              </a>
+              <p>{res.description}</p>
+            </div>
+            <p className="mt-auto text-md-on-surface-variant text-sm">Source: {res.source}</p>
           </Card>
         ))}
       </div>
