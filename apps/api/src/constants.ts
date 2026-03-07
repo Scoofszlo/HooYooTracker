@@ -22,4 +22,8 @@ export const ZZZ_SOURCES = {
     name: "Game8",
     url: "https://game8.co/games/Zenless-Zone-Zero/archives/435683",
   },
+  PCGAMESN: {
+    name: "PCGamesN",
+    url: "https://www.pcgamesn.com/zenless-zone-zero/codes",
+  }
 };
