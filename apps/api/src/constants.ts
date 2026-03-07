@@ -14,7 +14,7 @@ export const GI_SOURCES = {
   VG247: {
     name: "VG247",
     url: "https://www.vg247.com/genshin-impact-codes",
-  }
+  },
 };
 
 export const ZZZ_SOURCES = {
@@ -29,5 +29,5 @@ export const ZZZ_SOURCES = {
   VG247: {
     name: "VG247",
     url: "https://www.vg247.com/zenless-zone-zero-codes",
-  }
+  },
 };

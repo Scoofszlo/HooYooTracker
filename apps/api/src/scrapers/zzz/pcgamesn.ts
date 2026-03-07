@@ -16,13 +16,16 @@ export class ZZZPCGamesNScraper implements RedeemCodeScraper {
     rows.each((_, element) => {
       const $li = $(element);
       const code = $li.find("strong:eq(0)").text().trim();
-      const description = $li.text().replace(/\w+\s+-\s+/g, "").trim();
+      const description = $li
+        .text()
+        .replace(/\w+\s+-\s+/g, "")
+        .trim();
       results.push({
         source: this.sourceName,
         code: code,
         description: description,
       });
-    })
+    });
 
     return results;
   }

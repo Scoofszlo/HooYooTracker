@@ -17,13 +17,16 @@ export class GIRockPaperShotgunScraper implements RedeemCodeScraper {
     li.each((_, element) => {
       const $li = $(element);
       const code = $li.find("strong").text().trim();
-      const description = $li.text().replace(/\w+:\s+/g, "").trim();
+      const description = $li
+        .text()
+        .replace(/\w+:\s+/g, "")
+        .trim();
       results.push({
         source: this.sourceName,
         code: code,
         description: description,
       });
-    })
+    });
 
     return results;
   }
