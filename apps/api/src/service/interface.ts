@@ -1,6 +1,7 @@
 import type { RedeemCode } from "@hooyootracker/core";
 import type { RedeemCodeScraper } from "../scrapers/interface.ts";
 import type { GameQuery, RedeemCodeServiceDeps } from "../types.ts";
+import { getUniqueCodes } from "./helper.ts";
 
 export class RedeemCodeService {
   private giScrapers: RedeemCodeScraper[];
@@ -12,32 +13,16 @@ export class RedeemCodeService {
   }
 
   async getCodes(game: GameQuery): Promise<RedeemCode[]> {
-    if (game === "gi") {
-      return this.getUniqueCodesFromScrapers(this.giScrapers);
+    if (game != "gi" && game != "zzz") {
+      throw new Error(`Unsupported game query: ${game}`);
     }
 
-    if (game === "zzz") {
-      return this.getUniqueCodesFromScrapers(this.zzzScrapers);
-    }
-
-    throw new Error(`Unsupported game query: ${game}`);
-  }
-
-  private async getUniqueCodesFromScrapers(
-    scrapers: RedeemCodeScraper[],
-  ): Promise<RedeemCode[]> {
+    const scrapers = game === "gi" ? this.giScrapers : this.zzzScrapers;
     const allResults = await Promise.all(
       scrapers.map((scraper) => scraper.scrape()),
     );
     const flattenedResults = allResults.flat();
-    const uniqueMap = new Map<string, RedeemCode>();
 
-    flattenedResults.forEach((code) => {
-      if (!uniqueMap.has(code.code)) {
-        uniqueMap.set(code.code, code);
-      }
-    });
-
-    return Array.from(uniqueMap.values());
+    return getUniqueCodes(flattenedResults);
   }
 }
