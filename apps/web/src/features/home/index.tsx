@@ -19,6 +19,7 @@ import { formatTimeAndDate } from "../../utils";
 export function Home() {
   const [game, setGame] = useState<Games>("Genshin Impact");
   const { data, error, refetch, isLoading, isRefetching } = useFetchCodes(game);
+  const showSnackbar = useSnackbarStore((state) => state.show);
 
   usePageTitle("Home");
 
@@ -30,7 +31,17 @@ export function Home() {
           <Spacer size="0.5rem" />
           <Filters selectedFilter={game} onSelect={setGame} />
         </div>
-        <RefreshButton onClick={() => refetch()} />
+        <RefreshButton
+          onClick={() =>
+            refetch({
+              onRefetch: () =>
+                showSnackbar("Refreshing codes...", "processing"),
+              onSuccess: () =>
+                showSnackbar("Codes refreshed successfully!", "success"),
+              onError: () => showSnackbar("Failed to refresh codes.", "error"),
+            })
+          }
+        />
       </div>
       <Spacer size="2rem" />
       <CodeList
