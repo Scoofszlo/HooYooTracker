@@ -2,7 +2,7 @@ import type { RedeemCode } from "@hooyootracker/core";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { ZZZ_SOURCES } from "../../constants.ts";
-import type { RedeemCodeScraper } from "../base.ts";
+import type { RedeemCodeScraper } from "../interface.ts";
 
 export class ZZZGame8Scraper implements RedeemCodeScraper {
   sourceName: string = ZZZ_SOURCES.GAME8.name;

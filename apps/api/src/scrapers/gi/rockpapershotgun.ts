@@ -2,7 +2,7 @@ import type { RedeemCode } from "@hooyootracker/core";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { GI_SOURCES } from "../../constants.ts";
-import type { RedeemCodeScraper } from "../base.ts";
+import type { RedeemCodeScraper } from "../interface.ts";
 
 export class GIRockPaperShotgunScraper implements RedeemCodeScraper {
   sourceName: string = GI_SOURCES.ROCK_PAPER_SHOTGUN.name;
