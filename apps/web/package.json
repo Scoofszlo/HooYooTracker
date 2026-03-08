@@ -6,7 +6,8 @@
   "scripts": {
     "type": "tsc -b",
     "lint": "eslint .",
-    "build": "tsc -b && eslint . && vite build",
+    "test": "vitest run",
+    "build": "tsc -b && eslint . && vitest run && vite build",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version",
@@ -43,6 +44,7 @@
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
-    "vite": "^7.3.1"
+    "vite": "^7.3.1",
+    "vitest": "^3.2.4"
   }
 }
