@@ -1,31 +1,38 @@
-import Router from "express";
+import { Router, type Request, type Response } from "express";
 import { createRedeemCodeService } from "../service/factory.ts";
-import type { GameQuery } from "../types.ts";
+import type { RedeemCodeService } from "../service/interface.ts";
 
-const codesRouter = Router();
-const service = createRedeemCodeService();
+type RedeemCodeServiceLike = Pick<RedeemCodeService, "getCodes">;
 
-codesRouter.get("/codes", (req, res) => {
-  const query = req.query["game"] as GameQuery;
+export function createCodesRouter(
+  service: RedeemCodeServiceLike = createRedeemCodeService(),
+) {
+  const codesRouter = Router();
 
-  if (!query || (query !== "gi" && query !== "zzz")) {
-    return res.status(400).json({
-      error: "Invalid query parameter. Expected 'game=gi' or 'game=zzz'.",
-    });
-  }
+  codesRouter.get("/codes", (req: Request, res: Response) => {
+    const query = req.query["game"];
 
-  return service
-    .getCodes(query)
-    .then((codes) => {
-      res.json({
-        codes,
-        date: new Date().toISOString(),
+    if (query !== "gi" && query !== "zzz") {
+      return res.status(400).json({
+        error: "Invalid query parameter. Expected 'game=gi' or 'game=zzz'.",
       });
-    })
-    .catch((error) => {
-      console.error("Error fetching codes:", error);
-      res.status(500).json({ error: `Failed to fetch codes: ${error}` });
-    });
-});
+    }
 
-export { codesRouter };
+    return service
+      .getCodes(query)
+      .then((codes) => {
+        res.json({
+          codes,
+          date: new Date().toISOString(),
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching codes:", error);
+        res.status(500).json({ error: `Failed to fetch codes: ${error}` });
+      });
+  });
+
+  return codesRouter;
+}
+
+export const codesRouter = createCodesRouter();

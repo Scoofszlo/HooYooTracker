@@ -9,6 +9,7 @@
   "scripts": {
     "type": "tsc",
     "lint": "eslint .",
+    "test": "vitest run",
     "build": "tsc && eslint . && tsdown",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
@@ -30,6 +31,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^24.10.13",
+    "@types/supertest": "^6.0.3",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
@@ -40,6 +42,8 @@
     "tsdown": "^0.20.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1"
+    "typescript-eslint": "^8.56.1",
+    "supertest": "^7.1.4",
+    "vitest": "^3.2.4"
   }
 }
