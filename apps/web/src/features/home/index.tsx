@@ -14,6 +14,7 @@ import { formatTimeAndDate } from "../../utils";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from "../../components/ui/IconButton";
 import { useElapsedTime } from "../../hooks/useElapsedTime";
+import clsx from "clsx";
 
 export function Home() {
   const [game, setGame] = useState<Games>("Genshin Impact");
@@ -95,7 +96,17 @@ function CodeList({
               </a>
               <p>{res.description}</p>
             </div>
-            <p className="mt-auto text-md-on-surface-variant text-sm">Source: {res.source}</p>
+            <a
+              className={clsx(
+                "text-sm mt-auto hover:cursor-pointer text-md-on-surface-variant",
+                "hover:text-md-on-surface-variant/62 transition-all"
+              )}
+              href={res.source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Source: {res.source.name}
+            </a>
           </Card>
         ))}
       </div>

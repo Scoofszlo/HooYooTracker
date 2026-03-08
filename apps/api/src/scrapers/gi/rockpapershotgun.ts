@@ -22,7 +22,10 @@ export class GIRockPaperShotgunScraper implements RedeemCodeScraper {
         .trim();
 
       results.push({
-        source: this.sourceName,
+        source: {
+          name: GI_SOURCES.ROCK_PAPER_SHOTGUN.name,
+          url: GI_SOURCES.ROCK_PAPER_SHOTGUN.url,
+        },
         code: code,
         description: description,
       });

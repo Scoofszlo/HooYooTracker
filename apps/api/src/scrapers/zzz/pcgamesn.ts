@@ -22,7 +22,10 @@ export class ZZZPCGamesNScraper implements RedeemCodeScraper {
         .trim();
 
       results.push({
-        source: this.sourceName,
+        source: {
+          name: ZZZ_SOURCES.PCGAMESN.name,
+          url: ZZZ_SOURCES.PCGAMESN.url,
+        },
         code: code,
         description: description,
       });

@@ -33,7 +33,10 @@ export class ZZZGame8Scraper implements RedeemCodeScraper {
       };
 
       results.push({
-        source: this.sourceName,
+        source: {
+          name: ZZZ_SOURCES.GAME8.name,
+          url: ZZZ_SOURCES.GAME8.url,
+        },
         code: code,
         description: description(),
       });

@@ -33,7 +33,10 @@ export class GIGame8Scraper implements RedeemCodeScraper {
       };
 
       results.push({
-        source: this.sourceName,
+        source: {
+          name: GI_SOURCES.GAME8.name,
+          url: GI_SOURCES.GAME8.url,
+        },
         code: code,
         description: description(),
       });

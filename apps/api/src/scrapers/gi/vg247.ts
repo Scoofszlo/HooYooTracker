@@ -22,7 +22,10 @@ export class GIVG247Scraper implements RedeemCodeScraper {
         .trim();
 
       results.push({
-        source: this.sourceName,
+        source: {
+          name: GI_SOURCES.VG247.name,
+          url: GI_SOURCES.VG247.url,
+        },
         code: code,
         description: description,
       });

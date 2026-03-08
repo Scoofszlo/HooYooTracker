@@ -22,7 +22,10 @@ export class ZZZVG247Scraper implements RedeemCodeScraper {
         .trim();
 
       results.push({
-        source: this.sourceName,
+        source: {
+          name: ZZZ_SOURCES.VG247.name,
+          url: ZZZ_SOURCES.VG247.url,
+        },
         code: code,
         description: description,
       });
