@@ -2,7 +2,7 @@ import type { RedeemCode } from "@hooyootracker/core";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { GI_SOURCES } from "../../constants.ts";
-import type { RedeemCodeScraper } from "../base.ts";
+import type { RedeemCodeScraper } from "../interface.ts";
 
 export class GIGame8Scraper implements RedeemCodeScraper {
   sourceName: string = GI_SOURCES.GAME8.name;
@@ -15,7 +15,7 @@ export class GIGame8Scraper implements RedeemCodeScraper {
 
     rows.each((_, element) => {
       const $row = $(element);
-      const code = $row.find("input").val() as string; // Get the value of the input element
+      const code = $row.find("input").val() as string;
       const description = () => {
         const td = $row.find("td:nth-child(2)");
         const divs = td.find("div");
@@ -30,10 +30,13 @@ export class GIGame8Scraper implements RedeemCodeScraper {
         });
 
         return rewards.join(", ");
-      }; // Get the text of the second td element
+      };
 
       results.push({
-        source: this.sourceName,
+        source: {
+          name: GI_SOURCES.GAME8.name,
+          url: GI_SOURCES.GAME8.url,
+        },
         code: code,
         description: description(),
       });

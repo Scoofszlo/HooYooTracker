@@ -14,6 +14,7 @@ import { formatTimeAndDate } from "../../utils";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from "../../components/ui/IconButton";
 import { useElapsedTime } from "../../hooks/useElapsedTime";
+import clsx from "clsx";
 
 export function Home() {
   const [game, setGame] = useState<Games>("Genshin Impact");
@@ -22,7 +23,7 @@ export function Home() {
   usePageTitle("Home");
 
   return (
-    <Content className="lg:mt-8 p-4">
+    <Content className="p-4 lg:p-8">
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 sm:justify-between sm:items-center">
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold">List of Codes</h1>
@@ -83,16 +84,29 @@ function CodeList({
       <LastFetched date={result.date} />
       <div className="grid sm:grid-cols-2 gap-4">
         {result.codes.map((res) => (
-          <Card key={res.code}>
+          <Card key={res.code} className="gap-4">
+            <div className="flex flex-col">
+              <a
+                className="text-xl font-bold hover:cursor-pointer hover:text-md-on-background/62 transition-all"
+                href={getLink(res.code)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {res.code}
+              </a>
+              <p>{res.description}</p>
+            </div>
             <a
-              className="text-xl font-bold hover:cursor-pointer hover:text-md-on-background/62 transition-all"
-              href={getLink(res.code)}
+              className={clsx(
+                "text-sm mt-auto hover:cursor-pointer text-md-on-surface-variant",
+                "hover:text-md-on-surface-variant/62 transition-all"
+              )}
+              href={res.source.url}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {res.code}
+              Source: {res.source.name}
             </a>
-            <p>{res.description}</p>
           </Card>
         ))}
       </div>
