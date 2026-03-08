@@ -13,6 +13,7 @@
     "test:web": "npm run test -w apps/web",
     "build:web": "npm run build -w apps/web",
     "build:api": "npm run build -w apps/api",
+    "build:skip-checks": "npm run build:skip-checks -w apps/web && npm run build:skip-checks -w apps/api",
     "lint": "npm run lint -w apps/web && npm run lint -w apps/api",
     "type": "npm run type -w apps/web && npm run type -w apps/api",
     "test": "npm run test:api && npm run test:web",
