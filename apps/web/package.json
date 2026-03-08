@@ -7,7 +7,7 @@
     "type": "tsc -b",
     "lint": "eslint .",
     "test": "vitest run",
-    "build": "tsc -b && eslint . && vite build",
+    "build": "tsc -b && eslint . && vitest run && vite build",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version",
