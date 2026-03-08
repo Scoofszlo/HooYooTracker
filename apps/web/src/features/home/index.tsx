@@ -22,7 +22,7 @@ export function Home() {
   usePageTitle("Home");
 
   return (
-    <Content className="lg:mt-8 p-4">
+    <Content className="p-4 lg:p-8">
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 sm:justify-between sm:items-center">
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold">List of Codes</h1>
