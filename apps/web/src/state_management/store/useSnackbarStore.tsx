@@ -6,6 +6,7 @@ type SnackbarState = {
   message: string | null;
   open: boolean;
   status: Status;
+  action?: Action;
   showDismiss?: boolean;
   show: (message: string, options?: SnackbarOptions) => void;
   hide: () => void;
@@ -14,8 +15,14 @@ type SnackbarState = {
 type SnackbarOptions = {
   status?: Status;
   duration?: number;
+  action?: Action;
   showDismiss?: boolean;
 };
+
+type Action = {
+  name: string;
+  handler: () => void;
+}
 
 const snackbarDefaultState = {
   message: null,
@@ -38,12 +45,14 @@ export const useSnackbarStore = create<SnackbarState>((set) => ({
     const status = options?.status ?? "info";
     const duration = options?.duration ?? 3000;
     const showDismiss = options?.showDismiss ?? false;
+    const action = options?.action;
 
     set({
       message,
       open: true,
       status,
       showDismiss,
+      action,
     });
 
     if (status !== "processing") {

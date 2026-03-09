@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { useSnackbarStore } from "../../../state_management/store/useSnackbarStore";
 
 export function Snackbar() {
-  const { message, open, hide, status, showDismiss } = useSnackbarStore();
+  const { message, open, hide, status, action, showDismiss } = useSnackbarStore();
 
   if (!open) return null;
 
@@ -19,8 +19,8 @@ export function Snackbar() {
       )}
     >
       {status === "success" && (
-        <div className="text-md-on-inverse-surface">
-          <CheckCircleIcon />
+        <div className="flex text-md-on-inverse-surface text-2xl">
+          <CheckCircleIcon fontSize="inherit" />
         </div>
       )}
       {status === "processing" && (
@@ -29,11 +29,22 @@ export function Snackbar() {
         </div>
       )}
       {status === "error" && (
-        <div className="text-md-on-inverse-surface">
-          <ErrorIcon />
+        <div className="flex text-md-on-inverse-surface text-2xl">
+          <ErrorIcon fontSize="inherit" />
         </div>
       )}
       <p className="text-sm text-wrap break-all">{message}</p>
+      {action && (
+        <button
+          className={clsx(
+            "ml-auto text-sm text-md-inverse-primary min-w-fit -mt-0.5",
+            "cursor-pointer hover:text-md-inverse-primary/62 transition-all",
+          )}
+          onClick={action.handler}
+        >
+          {action.name}
+        </button>
+      )}
       {showDismiss && <DismissButton onClick={hide} />}
     </div>
   );
@@ -55,7 +66,7 @@ function DismissButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       className={clsx(
-        "ml-auto text-sm text-md-inverse-on-surface min-w-fit",
+        "flex ml-auto text-sm text-md-inverse-on-surface min-w-fit",
         "cursor-pointer hover:text-md-inverse-on-surface/62 transition-all",
       )}
       onClick={onClick}
