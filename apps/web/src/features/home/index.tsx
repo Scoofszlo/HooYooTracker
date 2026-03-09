@@ -1,24 +1,25 @@
+import type { APIResult } from "@hooyootracker/core";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import CircularProgress from "@mui/material/CircularProgress";
+import clsx from "clsx";
 import { useState } from "react";
 import { Content } from "../../components/layout/Content";
 import { Card } from "../../components/ui/Card";
 import { FilterChip } from "../../components/ui/FilterChip";
+import IconButton from "../../components/ui/IconButton";
 import { Spacer } from "../../components/ui/Spacer";
-import {
-  useFetchCodes,
-  type FetchedCodeContext,
-} from "../../hooks/useFetchCodes";
+import { GAME_CONFIG, GAME_LIST } from "../../constants";
+import { useElapsedTime } from "../../hooks/useElapsedTime";
+import { useFetchCodes } from "../../hooks/useFetchCodes";
 import usePageTitle from "../../hooks/usePageTitle";
+import { useSnackbarStore } from "../../state_management/store/useSnackbarStore";
 import type { Games } from "../../types";
 import { formatTimeAndDate } from "../../utils";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import IconButton from "../../components/ui/IconButton";
-import { useElapsedTime } from "../../hooks/useElapsedTime";
-import clsx from "clsx";
 
 export function Home() {
   const [game, setGame] = useState<Games>("Genshin Impact");
-  const { gi, zzz, refetch } = useFetchCodes(game);
+  const { data, error, refetch, isLoading, isRefetching } = useFetchCodes(game);
+  const showSnackbar = useSnackbarStore((state) => state.show);
 
   usePageTitle("Home");
 
@@ -30,30 +31,47 @@ export function Home() {
           <Spacer size="0.5rem" />
           <Filters selectedFilter={game} onSelect={setGame} />
         </div>
-        <RefreshButton onClick={() => refetch()} />
+        <RefreshButton
+          onClick={() =>
+            refetch({
+              onRefetch: () =>
+                showSnackbar("Refreshing codes...", { status: "processing" }),
+              onSuccess: () =>
+                showSnackbar("Codes refreshed successfully!", {
+                  status: "success",
+                }),
+              onError: () =>
+                showSnackbar("Failed to refresh codes.", { status: "error" }),
+            })
+          }
+        />
       </div>
       <Spacer size="2rem" />
-      {game === "Genshin Impact" && <CodeList context={gi} game={game} />}
-      {game === "Zenless Zone Zero" && <CodeList context={zzz} game={game} />}
+      <CodeList
+        data={data}
+        error={error}
+        game={game}
+        isLoading={isLoading}
+        isRefetching={isRefetching}
+      />
     </Content>
   );
 }
 
 function CodeList({
-  context,
+  data,
+  error,
   game,
+  isLoading,
+  isRefetching,
 }: {
-  context: FetchedCodeContext;
+  data: APIResult | undefined;
+  error: Error | null;
   game: Games;
+  isLoading: boolean;
+  isRefetching: boolean;
 }) {
-  const { result, error, isLoading, isRefetching } = context;
-  const getLink = (code: string) => {
-    if (game === "Genshin Impact") {
-      return `https://genshin.hoyoverse.com/en/gift?code=${code}`;
-    } else if (game === "Zenless Zone Zero") {
-      return `https://zenless.hoyoverse.com/redemption?code=${code}`;
-    }
-  };
+  const redeemBaseUrl = GAME_CONFIG[game].redeemBaseUrl;
 
   if (isLoading || isRefetching) {
     return (
@@ -71,7 +89,7 @@ function CodeList({
     );
   }
 
-  if (!result || result.codes.length === 0) {
+  if (!data || data.codes.length === 0) {
     return (
       <Card>
         <p>No codes available for {game}.</p>
@@ -81,31 +99,31 @@ function CodeList({
 
   return (
     <div className="flex flex-col gap-4">
-      <LastFetched date={result.date} />
+      <LastFetched date={data.date} />
       <div className="grid sm:grid-cols-2 gap-4">
-        {result.codes.map((res) => (
-          <Card key={res.code} className="gap-4">
+        {data.codes.map((entry) => (
+          <Card key={entry.code} className="gap-4">
             <div className="flex flex-col">
               <a
                 className="text-xl font-bold hover:cursor-pointer hover:text-md-on-background/62 transition-all"
-                href={getLink(res.code)}
+                href={`${redeemBaseUrl}${entry.code}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {res.code}
+                {entry.code}
               </a>
-              <p>{res.description}</p>
+              <p>{entry.description}</p>
             </div>
             <a
               className={clsx(
                 "text-sm mt-auto hover:cursor-pointer text-md-on-surface-variant",
-                "hover:text-md-on-surface-variant/62 transition-all"
+                "hover:text-md-on-surface-variant/62 transition-all",
               )}
-              href={res.source.url}
+              href={entry.source.url}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Source: {res.source.name}
+              Source: {entry.source.name}
             </a>
           </Card>
         ))}
@@ -135,16 +153,14 @@ function Filters({
 }) {
   return (
     <div className="flex flex-row flex-wrap gap-2">
-      <FilterChip
-        label="Genshin Impact"
-        selected={selectedFilter === "Genshin Impact"}
-        onClick={() => onSelect("Genshin Impact")}
-      />
-      <FilterChip
-        label="Zenless Zone Zero"
-        selected={selectedFilter === "Zenless Zone Zero"}
-        onClick={() => onSelect("Zenless Zone Zero")}
-      />
+      {GAME_LIST.map((game) => (
+        <FilterChip
+          key={game}
+          label={game}
+          selected={selectedFilter === game}
+          onClick={() => onSelect(game)}
+        />
+      ))}
     </div>
   );
 }
