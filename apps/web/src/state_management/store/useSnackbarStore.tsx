@@ -6,8 +6,22 @@ type SnackbarState = {
   message: string | null;
   open: boolean;
   status: Status;
-  show: (message: string, status?: Status, duration?: number) => void;
+  showDismiss?: boolean;
+  show: (message: string, options?: SnackbarOptions) => void;
   hide: () => void;
+};
+
+type SnackbarOptions = {
+  status?: Status;
+  duration?: number;
+  showDismiss?: boolean;
+};
+
+const snackbarDefaultState = {
+  message: null,
+  open: false,
+  status: "info" as Status,
+  showDismiss: false,
 };
 
 let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -16,29 +30,31 @@ export const useSnackbarStore = create<SnackbarState>((set) => ({
   message: null,
   open: false,
   status: "info",
+  showDismiss: false,
 
-  show: (message, status, duration = 3000) => {
+  show: (message, options?: SnackbarOptions) => {
     if (timeout) clearTimeout(timeout);
+
+    const status = options?.status ?? "info";
+    const duration = options?.duration ?? 3000;
+    const showDismiss = options?.showDismiss ?? false;
 
     set({
       message,
       open: true,
-      status: status || "info",
+      status,
+      showDismiss,
     });
 
     if (status !== "processing") {
       timeout = setTimeout(() => {
-        set({
-          open: false,
-          message: null,
-        });
+        set(snackbarDefaultState);
       }, duration);
     }
   },
 
-  hide: () =>
-    set({
-      open: false,
-      message: null,
-    }),
+  hide: () => {
+    if (timeout) clearTimeout(timeout);
+    set(snackbarDefaultState);
+  },
 }));

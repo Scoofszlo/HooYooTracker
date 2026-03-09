@@ -35,10 +35,13 @@ export function Home() {
           onClick={() =>
             refetch({
               onRefetch: () =>
-                showSnackbar("Refreshing codes...", "processing"),
+                showSnackbar("Refreshing codes...", { status: "processing" }),
               onSuccess: () =>
-                showSnackbar("Codes refreshed successfully!", "success"),
-              onError: () => showSnackbar("Failed to refresh codes.", "error"),
+                showSnackbar("Codes refreshed successfully!", {
+                  status: "success",
+                }),
+              onError: () =>
+                showSnackbar("Failed to refresh codes.", { status: "error" }),
             })
           }
         />
