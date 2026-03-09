@@ -1,8 +1,18 @@
+import type { RedeemCode } from "@hooyootracker/core";
 import express from "express";
 import request from "supertest";
-import type { RedeemCode } from "@hooyootracker/core";
-import { createCodesRouter } from "../src/routes/codes.ts";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { codesRouter } from "../src/routes/codes.ts";
+
+const { mockGetCodes } = vi.hoisted(() => ({
+  mockGetCodes: vi.fn(),
+}));
+
+vi.mock("../src/service/factory.ts", () => ({
+  redeemCodeService: {
+    getCodes: mockGetCodes,
+  },
+}));
 
 function makeCode(code: string): RedeemCode {
   return {
@@ -16,13 +26,13 @@ function makeCode(code: string): RedeemCode {
 }
 
 describe("GET /api/codes", () => {
-  it("returns 400 for missing game query", async () => {
-    const mockService = {
-      getCodes: vi.fn(),
-    };
+  beforeEach(() => {
+    mockGetCodes.mockReset();
+  });
 
+  it("returns 400 for missing game query", async () => {
     const app = express();
-    app.use("/api", createCodesRouter(mockService));
+    app.use("/api", codesRouter);
 
     const response = await request(app).get("/api/codes");
 
@@ -30,33 +40,29 @@ describe("GET /api/codes", () => {
     expect(response.body).toEqual({
       error: "Invalid query parameter. Expected 'game=gi' or 'game=zzz'.",
     });
-    expect(mockService.getCodes).not.toHaveBeenCalled();
+    expect(mockGetCodes).not.toHaveBeenCalled();
   });
 
   it("returns codes when query is valid", async () => {
     const expectedCodes = [makeCode("GI123")];
-    const mockService = {
-      getCodes: vi.fn().mockResolvedValue(expectedCodes),
-    };
+    mockGetCodes.mockResolvedValue(expectedCodes);
 
     const app = express();
-    app.use("/api", createCodesRouter(mockService));
+    app.use("/api", codesRouter);
 
     const response = await request(app).get("/api/codes?game=gi");
 
     expect(response.status).toBe(200);
-    expect(mockService.getCodes).toHaveBeenCalledWith("gi");
+    expect(mockGetCodes).toHaveBeenCalledWith("gi");
     expect(response.body.codes).toEqual(expectedCodes);
     expect(typeof response.body.date).toBe("string");
   });
 
   it("returns 500 when service throws", async () => {
-    const mockService = {
-      getCodes: vi.fn().mockRejectedValue(new Error("boom")),
-    };
+    mockGetCodes.mockRejectedValue(new Error("boom"));
 
     const app = express();
-    app.use("/api", createCodesRouter(mockService));
+    app.use("/api", codesRouter);
 
     const response = await request(app).get("/api/codes?game=zzz");
 
