@@ -20,3 +20,5 @@ export function createRedeemCodeService(): RedeemCodeService {
     ],
   });
 }
+
+export const redeemCodeService = createRedeemCodeService();
