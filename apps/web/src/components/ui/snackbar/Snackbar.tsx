@@ -5,7 +5,8 @@ import clsx from "clsx";
 import { useSnackbarStore } from "../../../state_management/store/useSnackbarStore";
 
 export function Snackbar() {
-  const { message, open, hide, status, action, showDismiss } = useSnackbarStore();
+  const { message, open, hide, status, action, showDismiss } =
+    useSnackbarStore();
 
   if (!open) return null;
 
@@ -13,7 +14,7 @@ export function Snackbar() {
     <div
       className={clsx(
         "flex flex-row fixed items-center rounded-lg",
-        "left-1/2 -translate-x-1/2 z-10 bottom-8 w-96 pt-3 pb-3 pl-4 pr-4 gap-4",
+        "left-1/2 -translate-x-1/2 z-10 bottom-8 w-[90%] max-w-96 pt-3 pb-3 pl-4 pr-4 gap-4",
         "bg-md-inverse-surface text-md-inverse-on-surface rounded-lg",
         "shadow-md-shadow",
       )}
