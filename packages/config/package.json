@@ -1,6 +1,6 @@
 {
   "name": "@hooyootracker/config",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Shared ESLint and Prettier config",
   "license": "MIT",
   "author": "",
